@@ -1,0 +1,143 @@
+================================================================================
+PAPER: 2013_1302.1405_Reflected_Hawkes_Processes_and_Critical_Market_Reflexivity.pdf (Pages: 9)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+Empirical / Computational Elements:
+  * of “High Frequency Trading” which is blamed for having
+  * the auto-covariance of the process, deﬁned as:
+  * and the autocovariance must integrate to a ﬁnite con-
+  * stationary with inﬁnite mean, and the autocovariance of
+  * the process is trivially non-integrable (because the vari-
+  * stationary, with a ﬁnite mean (Λ) and variance but with
+  * verging integral of the autocovariance [30], must neces-
+  * covariance ν(τ ) which decays asymptotically as a power-
+
+================================================================================
+PAPER: 2015_1502.04592_Hawkes_Processes_in_Finance.pdf (Pages: 48)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+  * Proposition 1 (Stationarity). The processNt has asymptotically stationary incre-
+  * Proposition 2 (Markov property for exponential kernels). Consider a Hawkes pro-
+  * Proposition 3 (Degeneracy of critical, short-range Hawkes). LetNt be a univariat
+  * Theorem 1 (Existence of critical, stationarity). Let’s now consider a Hawkes pro
+  * Proposition 4 (First- and second-order statistics) . For a Hawkes process Nt wit
+  * Theorem 2 (Wiener-Hopf equation). Consider a Hawkes process deﬁned by Eq. (1)
+  * Proposition 5 (Auto-regressive projection). Consider a Hawkes processNt deﬁned
+  * Theorem 3 (Martingale representation). Given a Hawkes process (2), theD stochas-
+Empirical / Computational Elements:
+  * a particular class of multivariate point processes that has become very popular 
+  * empirical high frequency ﬁnance this last decade. After a reminder of the main
+  * empirical applications to address many diﬀerent problems in high frequency ﬁnanc
+  * order book.
+  * The availability of high frequency ﬁnancial data during the last decades allowed
+  * there were only few continuous time models for the high frequency price variatio
+  * is the ACD model introduced by Engle and Russel [28]. This model and its variant
+  * remains, by far, the most used model in high frequency econometrics [9]. In this
+
+================================================================================
+PAPER: 2016_1504.03100_Rough_Fractional_Diffusions_as_Scaling_Limits_of_Nearly_Unst.pdf (Pages: 21)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+  * Proposition 3.1. The function f α,λ is C ∞ on (0, 1] and
+  * Proposition 3.1 will be a key tool in the proofs of the main results.
+  * Proposition 3.2. Under Assumptions 1 and 2, the sequence (Z T,X T ) is tight. Fu
+  * Theorem 3.1. There exists a Brownian motion B on (Ω, A, P) (up to extension of t
+  * Theorem 3.1 can be interpreted as a volatility function. Actually, if th e tail 
+  * Theorem 3.2. Let (Xt) be a process satisfying (8) for t ∈ [0, 1] and assume α> 1
+  * Lemma 4.1. The sequences X T and ΛT are C-tight.
+  * Lemma 4.2. The sequence of martingales X T − ΛT tends to zero in probability, un
+Empirical / Computational Elements:
+  * developments, driven by the recent use of Hawkes processes i n various applied ﬁ
+  * is the density of the random variable
+  * where the (Xi) are iid random variables with density φ andI T is a geometric ran
+  * with parameter 1 −aT 3. The Laplace transform of the random variable J T , denot
+  * where the variance is increasing with power law rate are inco mpatible with the 
+  * random variables (J T ) converges in law towards the random variable whose densi
+  * sequel, c denotes a positive constant which may vary from line to line ( and eve
+  * random variable with the same law as ( Z,X ). We now work with this sequence of 
+
+================================================================================
+PAPER: 2017_1609.07474_Quadratic_Hawkes_Processes_for_Financial_Volatility.pdf (Pages: 8)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+Empirical / Computational Elements:
+  * time due to various nonlinear dissipation channels ( Stoker
+  * Dickey et al. 1994 ) has various mechanisms in shallow wa-
+  * lunar disk. This approach enables taking into account vari-
+  * oceans by ( 1) in dimensionless variables, normalized by to-
+  * and its confrontation with data for various choices of p, q =
+  * lar momentum IΩ, radius R/varoplus = 6 × 108 and moment of
+  * 1 + 0.6380 (Ω/Ωb)2] , I 0 = (2 /5)M R2/varoplus
+  * and Ut in the Moon’s tidal ﬁeld, δUb = GM 2R−3/varoplus h20, δUt =
+
+================================================================================
+PAPER: 2019_1609.02108_The_Characteristic_Function_of_Rough_Heston_Models.pdf (Pages: 35)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+  * Theorem 2.1. As T→∞ , under Assumptions 2.1 and 2.2, the process
+  * Corollary 2.1. As T → ∞, under Assumptions 2.1 and 2.2, the sequence of processe
+  * Theorem 3.1. We have
+  * Theorem 4.1. Consider the rough Heston model (3) with a correlation between the 
+  * Proposition 6.1. Under Assumptions 2.1 and 2.2, the sequence (ΛT,XT,ZT ) is C-ti
+  * Proposition 6.2. If (X,X,Z +,Z−) is a possible limit point for (XT,+,XT,−,ZT,+,Z
+  * Proposition 6.3. Letλ,ν,θ andV0 be positive constants,α∈ (1/2, 1) andB be a Brow
+  * Proposition 6.4. For any t∈ [0, 1],
+Empirical / Computational Elements:
+  * leverage eﬀect, time-varying volatility and fat tails, see [7, 9, 13, 35].
+  * instantaneous model calibration and pricing of derivatives, see [1, 8, 31, 32].
+  * kets at high frequency, give rise in the long run to rough volatility models. Th
+  * of ultra high frequency price models which reproduce the stylized facts of moder
+  * consider the following ultra high frequency tick-by-tick model for the transacti
+  * of high frequency markets in term of the parameters of the Hawkes process. We no
+  * • Markets are highly endogenous: In the high frequency trading context, most ord
+  * • It is not an easy task to make money with high frequency strategies on highly 
+
+================================================================================
+PAPER: 2019_1708.08796_Affine_Volterra_Processes.pdf (Pages: 47)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+  * Lemma 2.1. Let K ∈ L2loc(R+, Rm×d) and let L be an Rn×m-valued measure on R+ of
+  * Lemma 2.4. AssumeK satisﬁes (2.5) and consider a process X =K ∗(bdt+dM ), where 
+  * Lemma 2.5. Let X be a continuous process, F : R+ → Rm a continuous function, B ∈
+  * Lemma 2.1 yields
+  * Lemma 2.6. LetX be a continuous process and Z =
+  * Lemma 3.1. Assume b and σ are continuous and satisfy the linear growth condition
+  * Theorem 3.3. Assume b and σ are Lipschitz continuous and the components of K sat
+  * Theorem 3.4. Assume that K admits a resolvent of the ﬁrst kind, that the compone
+Empirical / Computational Elements:
+  * diﬀusions. For speciﬁc state spaces, we prove existence, uniquen ess, and invari
+  * ENSIIE, Universit´ e Paris-Saclay, UMR CNRS 8071, IBGBI 23 B oulevard de France,
+  * with A(u) = (uA1u⊤,...,uA du⊤) and B = (b1 · · · bd). Alternatively, using the v
+  * delicate invariance properties for these equations. While standard martingale an
+  * If the function f on R+ is right-continuous and of locally bounded variation, th
+  * For a measurable function K on R+ and a measure L on R+ of locally bounded varia
+  * locally bounded variation. Let M be a d-dimensional continuous local martingale 
+  * Mytnik and Neuman (2011) assume K to be a function of smooth variation and M to 
+
+================================================================================
+PAPER: 2019_1801.00978_Markovian_Approximations_of_Rough_Heston_Models.pdf (Pages: 13)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+  * Theorem 2.1 (Biorthogonal space decompositions, [DS99c]) . Consider two mul-
+  * Corollary 2.3. In the situation of Thm. 2.1, for j≥ 0 let Ψj ={ψj,x : x∈ Jj}
+  * Proposition 2.4 ([NS09]). Forj≥ 0, let Θj∪Σj+1 and ˜Φj be uniform Riesz bases
+  * Lemma 3.1. Let Σ and ˜Σ be two collections of ‘local’ functions onT both satisfy
+Empirical / Computational Elements:
+  * parabolic PDEs in a simultaneous space-time variational formulation. One of the
+  * and a suitable wavelet basis for the ﬂux variable is at least of order 2, we nee
+  * section it will be shown how to reduce the construction of the various collectio
+
+================================================================================
+PAPER: 2020_2004.09849_A_Fractional_Hawkes_Process_with_Mittag_Leffler_Intensity.pdf (Pages: 25)
+--------------------------------------------------------------------------------
+Key Formal Results / Theorems:
+Empirical / Computational Elements:
+  * Auer PhD 13,14, Shivaram Avula FRCR 7, Richard Grundy PhD 15, Andrew C Peet PhD 
+  * using traditional methods such as Cox-regression to derive significant covariate
+  * Univariate statistical analysis
+  * Univariate Cox-regression was performed with each individual imaging feature, cl
+  * analysis was used to reduce data dimensionality with 95% of data variance or N-1
+  * Univariate statistical analysis showed significant differences in both whole bra
+  * Whole cohort univariate cox regression revealed a number of imaging features wit
+  * Further univariate analysis of each cluster showed significant differences in a 
+
