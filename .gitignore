@@ -39,6 +39,7 @@ htmlcov/
 
 # CRITICAL USER DIRECTIVE: Strictly exclude all papers, LaTeX source files, and PDF manuscripts
 reports/
+submission_tex/
 *.tex
 *.pdf
 *.aux
