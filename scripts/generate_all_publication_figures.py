@@ -54,14 +54,19 @@ prices = df["price"].values[:10000]
 T_total = float(timestamps[-1])
 N_total = len(timestamps)
 
-print(f"Fitting ML-TFHP on {N_total} trades (T={T_total:.1f}s)...")
-ml_model = MLTFHPModel(M=12).fit(timestamps, T=T_total, n_starts=1, compute_inference=False, seed=42)
+# In-sample calibration partition (70%, matching Tables 1-4 of the manuscript)
+T_train = T_total * 0.70
+train_events = timestamps[timestamps <= T_train]
+N_train = len(train_events)
+
+print(f"Fitting calibrated ML-TFHP on {N_train} in-sample trades (T<={T_train:.1f}s)...")
+ml_model = MLTFHPModel(M=12).fit(train_events, T=T_train, n_starts=3, compute_inference=True, seed=42)
 mu_ml, alpha_ml, beta_ml, gamma_ml, eta_ml = ml_model.params
 n_star_ml = ml_model.branching_ratio_
 print(f"  ML-TFHP: mu={mu_ml:.3f}, alpha={alpha_ml:.3f}, beta={beta_ml:.3f}, gamma={gamma_ml:.3f}, eta={eta_ml:.3f}, n*={n_star_ml:.3f}")
 
-print("Fitting Exponential Hawkes baseline...")
-ehp_model = ExponentialHawkesModel().fit(timestamps, T=T_total, seed=42)
+print(f"Fitting Exponential Hawkes baseline on {N_train} in-sample trades...")
+ehp_model = ExponentialHawkesModel().fit(train_events, T=T_train, seed=42)
 mu_exp, alpha_exp, beta_exp = ehp_model.params
 n_star_exp = ehp_model.branching_ratio_
 print(f"  EHP: mu={mu_exp:.3f}, alpha={alpha_exp:.3f}, beta={beta_exp:.3f}, n*={n_star_exp:.3f}")
@@ -253,7 +258,7 @@ ax1.plot(h_arr, p_rmse, 's:', color="#DC2626", label="Poisson Baseline", lw=2.2,
 ax1.plot(h_arr, e_rmse, 'o--', color="#2563EB", label="Exponential Hawkes (EHP)", lw=2.6, markersize=9)
 ax1.plot(h_arr, m_rmse, '^-', color="#059669", label="ML-TFHP (This Research)", lw=3.2, markersize=10)
 
-ax1.axvspan(30, 600, color="#DCFCE7", alpha=0.45, label="Fractional Superiority Zone")
+ax1.axvspan(60, 600, color="#DCFCE7", alpha=0.45, label=r"Extended Horizon Zone ($\Delta t \geq 60$ s)")
 
 ax1.set_xlabel(r"Forecast Horizon $\Delta t$ (seconds)", fontsize=16, fontweight="bold")
 ax1.set_ylabel("Root Mean Square Error (RMSE)", fontsize=16, fontweight="bold")
@@ -269,7 +274,7 @@ ax2.plot(h_arr, p_mae, 's:', color="#DC2626", label="Poisson Baseline", lw=2.2, 
 ax2.plot(h_arr, e_mae, 'o--', color="#2563EB", label="Exponential Hawkes (EHP)", lw=2.6, markersize=9)
 ax2.plot(h_arr, m_mae, '^-', color="#059669", label="ML-TFHP (This Research)", lw=3.2, markersize=10)
 
-ax2.axvspan(30, 600, color="#DCFCE7", alpha=0.45, label="Fractional Superiority Zone")
+ax2.axvspan(60, 600, color="#DCFCE7", alpha=0.45, label=r"Extended Horizon Zone ($\Delta t \geq 60$ s)")
 
 ax2.set_xlabel(r"Forecast Horizon $\Delta t$ (seconds)", fontsize=16, fontweight="bold")
 ax2.set_ylabel("Mean Absolute Error (MAE)", fontsize=16, fontweight="bold")
@@ -478,7 +483,7 @@ print(f"Saved: {fig6_path}")
 print("\n--- Generating Figure 7: Bivariate Order Flow Interaction (1.3x Text) ---")
 channel_types = np.where(df["is_buyer_maker"].values[:10000], 1, 0)
 biv_model = BivariateMLTFHPModel(M=10, symmetric=True)
-biv_model.fit(timestamps, channel_types, T=T_total, n_starts=1, seed=42)
+biv_model.fit(timestamps, channel_types, T=T_total, n_starts=3, seed=42)
 mu_b, alpha_b, beta_b, gamma_b, eta_self, eta_cross = biv_model.params
 cross_ratio = biv_model.get_cross_excitation_ratio()
 spec_rad = biv_model.spectral_radius_
