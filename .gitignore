@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Pytest & Diagnostics
+.pytest_cache/
+.coverage
+htmlcov/
+
+# CRITICAL USER DIRECTIVE: Strictly exclude all papers, LaTeX source files, and PDF manuscripts
+reports/
+*.tex
+*.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+paper.*
+manuscript.*
+submission_tables.*
+
+# Temporary / Scratch Files
+scratch/
+*.tmp
