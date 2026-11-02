@@ -8,6 +8,7 @@ Executes:
 """
 
 import os
+import shutil
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -129,8 +130,10 @@ def main():
     ax2.legend(fontsize=10)
 
     plt.tight_layout()
-    fig_path = "figures/multi_horizon_forecasting_crossover.png"
+    fig_path = "figures/multi_horizon_forecasting_crossover.pdf"
     plt.savefig(fig_path)
+    shutil.copy(fig_path, "submission_tex/figures/multi_horizon_forecasting_crossover.pdf")
+    shutil.copy(fig_path, "reports/figures/multi_horizon_forecasting_crossover.pdf")
     plt.close()
     print(f"Saved figure: {fig_path}")
 

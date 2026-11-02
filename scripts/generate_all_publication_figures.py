@@ -27,6 +27,7 @@ from ml_tfhp.evaluation.diagnostics import compute_qq_plot_data
 # Ensure output directories
 os.makedirs("figures", exist_ok=True)
 os.makedirs("submission_tex/figures", exist_ok=True)
+os.makedirs("reports/figures", exist_ok=True)
 
 # -----------------------------------------------------------------------------
 # GLOBAL TYPOGRAPHY: INCREASED BY 1.3X FOR OPTIMAL READABILITY
@@ -138,9 +139,10 @@ ax2.tick_params(axis='both', which='major', labelsize=14)
 ax2.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13.5)
 
 plt.tight_layout(pad=1.5)
-fig1_path = "figures/fig1_kernel_mechanics.png"
-plt.savefig(fig1_path, dpi=300)
-shutil.copy(fig1_path, "submission_tex/figures/fig1_kernel_mechanics.png")
+fig1_path = "figures/fig1_kernel_mechanics.pdf"
+plt.savefig(fig1_path)
+shutil.copy(fig1_path, "submission_tex/figures/fig1_kernel_mechanics.pdf")
+shutil.copy(fig1_path, "reports/figures/fig1_kernel_mechanics.pdf")
 plt.close()
 print(f"Saved: {fig1_path}")
 
@@ -209,9 +211,10 @@ ax2.tick_params(axis='both', which='major', labelsize=14)
 ax2.legend(loc="lower right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 
 plt.tight_layout(pad=1.5)
-fig2_path = "figures/fig2_resolvent_and_signature_plot.png"
-plt.savefig(fig2_path, dpi=300)
-shutil.copy(fig2_path, "submission_tex/figures/fig2_resolvent_and_signature_plot.png")
+fig2_path = "figures/fig2_resolvent_and_signature_plot.pdf"
+plt.savefig(fig2_path)
+shutil.copy(fig2_path, "submission_tex/figures/fig2_resolvent_and_signature_plot.pdf")
+shutil.copy(fig2_path, "reports/figures/fig2_resolvent_and_signature_plot.pdf")
 plt.close()
 print(f"Saved: {fig2_path}")
 
@@ -286,9 +289,10 @@ ax2.tick_params(axis='both', which='major', labelsize=14)
 ax2.legend(loc="upper left", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13.5)
 
 plt.tight_layout(pad=1.5)
-fig3_path = "figures/multi_horizon_forecasting_crossover.png"
-plt.savefig(fig3_path, dpi=300)
-shutil.copy(fig3_path, "submission_tex/figures/multi_horizon_forecasting_crossover.png")
+fig3_path = "figures/multi_horizon_forecasting_crossover.pdf"
+plt.savefig(fig3_path)
+shutil.copy(fig3_path, "submission_tex/figures/multi_horizon_forecasting_crossover.pdf")
+shutil.copy(fig3_path, "reports/figures/multi_horizon_forecasting_crossover.pdf")
 plt.close()
 print(f"Saved: {fig3_path}")
 
@@ -336,9 +340,10 @@ ax_bot.tick_params(axis='both', which='major', labelsize=14)
 ax_bot.legend(loc="center right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 
 plt.tight_layout(pad=1.5)
-fig4_path = "figures/intensity_comparison.png"
-plt.savefig(fig4_path, dpi=300)
-shutil.copy(fig4_path, "submission_tex/figures/intensity_comparison.png")
+fig4_path = "figures/intensity_comparison.pdf"
+plt.savefig(fig4_path)
+shutil.copy(fig4_path, "submission_tex/figures/intensity_comparison.pdf")
+shutil.copy(fig4_path, "reports/figures/intensity_comparison.pdf")
 plt.close()
 print(f"Saved: {fig4_path}")
 
@@ -406,11 +411,36 @@ ax2.tick_params(axis='both', which='major', labelsize=14)
 ax2.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 
 plt.tight_layout(pad=1.5)
-fig5_path = "figures/qq_plot_comparison.png"
-plt.savefig(fig5_path, dpi=300)
-shutil.copy(fig5_path, "submission_tex/figures/qq_plot_comparison.png")
+fig5_path = "figures/qq_plot_comparison.pdf"
+plt.savefig(fig5_path)
+shutil.copy(fig5_path, "submission_tex/figures/qq_plot_comparison.pdf")
+shutil.copy(fig5_path, "reports/figures/qq_plot_comparison.pdf")
 plt.close()
 print(f"Saved: {fig5_path}")
+
+# Standalone ACF figure for modular completeness
+fig_acf, ax_acf = plt.subplots(figsize=(9.0, 5.0), dpi=300)
+ax_acf.axhline(0, color="black", lw=1.2)
+ax_acf.axhline(bartlett, color="#DC2626", ls="--", lw=1.6, label=r"95% Bartlett White Noise Bounds ($\pm 1.96/\sqrt{N}$)")
+ax_acf.axhline(-bartlett, color="#DC2626", ls="--", lw=1.6)
+ax_acf.fill_between([0, max_lag + 1], -bartlett, bartlett, color="#FEE2E2", alpha=0.4)
+ax_acf.stem(lags - 0.15, acf_ml, linefmt="#1E40AF", markerfmt="o", basefmt="none", label="ML-TFHP Residual ACF")
+ax_acf.stem(lags + 0.15, acf_exp, linefmt="#64748B", markerfmt="^", basefmt="none", label="EHP Residual ACF")
+ax_acf.set_xlabel("Lag $k$ (Event Index)", fontsize=16, fontweight="bold")
+ax_acf.set_ylabel("Autocorrelation $\\hat{\\rho}(k)$", fontsize=16, fontweight="bold")
+ax_acf.set_title("Papangelou Residual Autocorrelation (ACF)", fontsize=17, fontweight="bold")
+ax_acf.set_xlim([0, max_lag + 1])
+ax_acf.set_ylim([-0.06, 0.08])
+ax_acf.grid(True, ls="--", alpha=0.35)
+ax_acf.tick_params(axis='both', which='major', labelsize=14)
+ax_acf.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
+plt.tight_layout(pad=1.5)
+fig_acf_path = "figures/residuals_acf.pdf"
+plt.savefig(fig_acf_path)
+shutil.copy(fig_acf_path, "submission_tex/figures/residuals_acf.pdf")
+shutil.copy(fig_acf_path, "reports/figures/residuals_acf.pdf")
+plt.close()
+print(f"Saved: {fig_acf_path}")
 
 
 # =============================================================================
@@ -470,9 +500,10 @@ ax.set_ylim([-0.12, max(np.max(losses)*1.1, np.max(es_hawkes)*1.1)])
 ax.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 
 plt.tight_layout(pad=1.5)
-fig6_path = "figures/fig6_frtb_var_expected_shortfall.png"
-plt.savefig(fig6_path, dpi=300)
-shutil.copy(fig6_path, "submission_tex/figures/fig6_frtb_var_expected_shortfall.png")
+fig6_path = "figures/fig6_frtb_var_expected_shortfall.pdf"
+plt.savefig(fig6_path)
+shutil.copy(fig6_path, "submission_tex/figures/fig6_frtb_var_expected_shortfall.pdf")
+shutil.copy(fig6_path, "reports/figures/fig6_frtb_var_expected_shortfall.pdf")
 plt.close()
 print(f"Saved: {fig6_path}")
 
@@ -556,12 +587,13 @@ ax2.text(0.5, -0.24,
          fontsize=14, fontweight="bold", color="#1E293B")
 
 plt.tight_layout(pad=1.5)
-fig7_path = "figures/fig7_bivariate_order_flow.png"
-plt.savefig(fig7_path, dpi=300)
-shutil.copy(fig7_path, "submission_tex/figures/fig7_bivariate_order_flow.png")
+fig7_path = "figures/fig7_bivariate_order_flow.pdf"
+plt.savefig(fig7_path)
+shutil.copy(fig7_path, "submission_tex/figures/fig7_bivariate_order_flow.pdf")
+shutil.copy(fig7_path, "reports/figures/fig7_bivariate_order_flow.pdf")
 plt.close()
 print(f"Saved: {fig7_path}")
 
 print("\n" + "="*70)
-print("ALL 7 FIGURES WITH 1.3X ENLARGED TEXT SUCCESSFULLY GENERATED!")
+print("ALL 7 PUBLICATION FIGURES SUCCESSFULLY GENERATED AS VECTOR PDF!")
 print("="*70)

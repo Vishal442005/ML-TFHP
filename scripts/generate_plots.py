@@ -6,6 +6,7 @@ Generate Publication-Ready Figures:
 """
 
 import os
+import shutil
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -44,22 +45,28 @@ def generate_all_figures():
 
     # 1. Plot intensity comparison over a high-clustering 30-second window
     t_start, t_end = 150.0, 185.0
-    intensity_file = str(output_dir / "intensity_comparison.png")
+    intensity_file = str(output_dir / "intensity_comparison.pdf")
     print(f"Plotting intensity comparison -> {intensity_file}")
     plot_intensity_path(events, [ehp, plhp, ml_tfhp], t_start, t_end, save_path=intensity_file)
+    shutil.copy(intensity_file, "submission_tex/figures/intensity_comparison.pdf")
+    shutil.copy(intensity_file, "reports/figures/intensity_comparison.pdf")
 
     # 2. Plot QQ-plots
-    qq_file = str(output_dir / "qq_plot_comparison.png")
+    qq_file = str(output_dir / "qq_plot_comparison.pdf")
     print(f"Plotting QQ residuals -> {qq_file}")
     plot_qq_residuals([ehp, plhp, ml_tfhp], save_path=qq_file)
+    shutil.copy(qq_file, "submission_tex/figures/qq_plot_comparison.pdf")
+    shutil.copy(qq_file, "reports/figures/qq_plot_comparison.pdf")
 
     # 3. Plot ML-TFHP residual ACF
-    acf_file = str(output_dir / "residuals_acf.png")
+    acf_file = str(output_dir / "residuals_acf.pdf")
     print(f"Plotting ACF residuals -> {acf_file}")
     residuals = ml_tfhp.compute_residuals()
     plot_acf_residuals(residuals, max_lag=25, title="ML-TFHP Compensator Residuals ACF", save_path=acf_file)
+    shutil.copy(acf_file, "submission_tex/figures/residuals_acf.pdf")
+    shutil.copy(acf_file, "reports/figures/residuals_acf.pdf")
 
-    print("\nAll publication figures successfully generated in figures/ directory!")
+    print("\nAll publication figures successfully generated as PDF in figures/ directory!")
 
 
 if __name__ == "__main__":
