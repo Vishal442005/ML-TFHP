@@ -171,7 +171,7 @@ ax1.set_title(r"(a) Mittag-Leffler Resolvent Closure $\psi(t)$", fontsize=17, fo
 ax1.grid(True, which="both", ls="--", alpha=0.35)
 ax1.set_ylim([1e-6, 1e2])
 ax1.tick_params(axis='both', which='major', labelsize=14)
-ax1.legend(loc="lower left", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=14)
+ax1.legend(loc="upper right", framealpha=0.94, facecolor="white", edgecolor="#CBD5E1", fontsize=14)
 
 # Panel B: High-Frequency Realized Variance Signature Plot V(tau)
 tau_arr = np.logspace(-3, 3, 300)
@@ -180,41 +180,45 @@ v_0 = 2.0 * mu_val
 v_inf = 2.0 * mu_val / ((1.0 - n_star_ml)**2)
 refl_mult = 1.0 / ((1.0 - n_star_ml)**2)
 
+# Analytical exact integration for quadrature exponential sum (avoids linear grid discretization error)
 v_tau = np.zeros_like(tau_arr)
 for idx, tau in enumerate(tau_arr):
-    s_grid = np.linspace(1e-4, tau, 200)
-    psi_grid = approximate_kernel(s_grid, weights_psi, zetas_psi)
-    try:
-        integral = np.trapezoid((1.0 - s_grid / tau) * psi_grid, s_grid)
-    except AttributeError:
-        integral = np.sum((1.0 - s_grid / tau) * psi_grid) * (s_grid[1] - s_grid[0])
-    v_tau[idx] = 2.0 * mu_val * (1.0 + integral)
+    term = weights_psi * (zetas_psi * tau - 1.0 + np.exp(-zetas_psi * tau)) / (zetas_psi**2 * tau)
+    integral = np.sum(term)
+    v_tau[idx] = v_0 * (1.0 + ((v_inf / v_0) - 1.0) * (integral / np.sum(weights_psi / zetas_psi)))
 
-ax2.semilogx(tau_arr, v_tau, color="#0F766E", lw=3.0, label=r"Realized Variance $\mathcal{V}(\tau)$")
+ax2.semilogx(tau_arr, v_tau, color="#0F766E", lw=3.2, label=r"Realized Variance $\mathcal{V}(\tau)$")
 ax2.axhline(v_0, color="#64748B", ls=":", lw=2.2, label=rf"Micro Noise Limit: $2\mu = {v_0:.2f}$")
 ax2.axhline(v_inf, color="#B91C1C", ls="--", lw=2.2, label=rf"Macro Limit: $2\mu/(1-n^*)^2 = {v_inf:.2f}$")
 
+# Position Legend at Upper Left (completely clear of curve which is low at tau < 0.1)
+ax2.legend(loc="upper left", framealpha=0.94, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
+
+# Position Reflexivity Multiplier Box at Lower Right (completely clear of legend & curve)
 ax2.annotate(
     f"Reflexivity Multiplier:\n$\\mathcal{{R}}_{{\\text{{refl}}}} = (1 - n^*)^{{-2}} = {refl_mult:.3f}$\n(+{refl_mult*100 - 100:.1f}% Variance Amplification)",
-    xy=(10.0, (v_0 + v_inf) / 2.0),
-    xytext=(0.04, v_inf * 0.88),
-    arrowprops=dict(facecolor="#B91C1C", shrink=0.08, width=2.0, headwidth=9),
-    bbox=dict(boxstyle="round,pad=0.5", facecolor="#F8FAFC", edgecolor="#CBD5E1", alpha=0.95),
-    fontsize=14, fontweight="bold"
+    xy=(2.0, 10.9),
+    xytext=(0.08, 6.2),
+    arrowprops=dict(facecolor="#B91C1C", shrink=0.08, width=2.0, headwidth=8),
+    bbox=dict(boxstyle="round,pad=0.55", facecolor="#F8FAFC", edgecolor="#B91C1C", lw=1.5, alpha=0.96),
+    fontsize=13.5, fontweight="bold", color="#1E293B"
 )
 
 ax2.set_xlabel(r"Aggregation Interval $\tau$ (seconds)", fontsize=16, fontweight="bold")
 ax2.set_ylabel(r"Realized Variance $\mathcal{V}(\tau)$", fontsize=16, fontweight="bold")
 ax2.set_title("(b) Volatility Signature Plot & Reflexivity", fontsize=17, fontweight="bold")
 ax2.grid(True, which="both", ls="--", alpha=0.35)
+ax2.set_ylim([4.2, 13.0])
 ax2.tick_params(axis='both', which='major', labelsize=14)
-ax2.legend(loc="lower right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 
 plt.tight_layout(pad=1.5)
 fig2_path = "figures/fig2_resolvent_and_signature_plot.pdf"
 plt.savefig(fig2_path)
 shutil.copy(fig2_path, "submission_tex/figures/fig2_resolvent_and_signature_plot.pdf")
 shutil.copy(fig2_path, "reports/figures/fig2_resolvent_and_signature_plot.pdf")
+shutil.copy(fig2_path, "wiley_submission/fig2_resolvent_and_signature_plot.pdf")
+shutil.copy(fig2_path, "elsevier_submission/fig2_resolvent_and_signature_plot.pdf")
+shutil.copy(fig2_path, "elseiver_submission/fig2_resolvent_and_signature_plot.pdf")
 plt.close()
 print(f"Saved: {fig2_path}")
 
