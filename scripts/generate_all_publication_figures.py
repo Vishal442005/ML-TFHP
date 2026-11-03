@@ -487,7 +487,8 @@ scorecard_text = (
     f"• Christoffersen Independence: p = {backtest_res['christoffersen_hawkes']['p_value']:.4f} [PASS]\n"
     f"• Acerbi-Székely ES Test (Z2): p = {backtest_res['acerbi_szekely_hawkes']['p_value']:.4f} [COMPLIANT]"
 )
-ax.text(0.02, 0.95, scorecard_text, transform=ax.transAxes, verticalalignment="top",
+# Move texts down to lower portion of the plot to prevent overlapping the time-series
+ax.text(0.02, 0.08, scorecard_text, transform=ax.transAxes, verticalalignment="bottom",
         bbox=dict(boxstyle="round,pad=0.6", facecolor="#F8FAFC", edgecolor="#2563EB", lw=1.6, alpha=0.95),
         fontsize=14.5, fontweight="bold", color="#1E293B")
 
@@ -497,13 +498,16 @@ ax.set_title("High-Frequency Value-at-Risk & Basel FRTB Coherent Expected Shortf
 ax.grid(True, ls="--", alpha=0.35)
 ax.tick_params(axis='both', which='major', labelsize=14)
 ax.set_ylim([-0.12, max(np.max(losses)*1.1, np.max(es_hawkes)*1.1)])
-ax.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
+ax.legend(loc="lower right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 
 plt.tight_layout(pad=1.5)
 fig6_path = "figures/fig6_frtb_var_expected_shortfall.pdf"
 plt.savefig(fig6_path)
 shutil.copy(fig6_path, "submission_tex/figures/fig6_frtb_var_expected_shortfall.pdf")
 shutil.copy(fig6_path, "reports/figures/fig6_frtb_var_expected_shortfall.pdf")
+shutil.copy(fig6_path, "wiley_submission/fig6_frtb_var_expected_shortfall.pdf")
+shutil.copy(fig6_path, "elsevier_submission/fig6_frtb_var_expected_shortfall.pdf")
+shutil.copy(fig6_path, "elseiver_submission/fig6_frtb_var_expected_shortfall.pdf")
 plt.close()
 print(f"Saved: {fig6_path}")
 
