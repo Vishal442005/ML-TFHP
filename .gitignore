@@ -41,6 +41,8 @@ htmlcov/
 reports/
 submission_tex/
 wiley_submission/
+elsevier_submission/
+elseiver_submission/
 *.tex
 *.pdf
 *.aux
