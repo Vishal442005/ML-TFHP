@@ -1,0 +1,23 @@
+{
+  "title": "ML-TFHP: Mittag-Leffler Tempered Fractional Hawkes Process Library for High-Frequency Quantitative Finance",
+  "upload_type": "software",
+  "description": "A high-performance Python package and reproduction library for Mittag-Leffler Tempered Fractional Hawkes Processes (ML-TFHP). Unifies volatility clustering, anomalous memory, and fast O(NM) state-space recursive likelihood inference in high-frequency financial markets. Includes Basel Committee FRTB Expected Shortfall risk backtesting, multi-horizon event forecasting, and bivariate order-flow estimation.",
+  "creators": [
+    {
+      "name": "Vishal",
+      "affiliation": "Laboratory of Statistical Physics and Computational Econometrics"
+    }
+  ],
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "Fractional Hawkes processes",
+    "Mittag-Leffler functions",
+    "Anomalous memory",
+    "Econophysics",
+    "Market microstructure",
+    "Expected Shortfall",
+    "Basel FRTB",
+    "Quantitative Finance"
+  ]
+}
