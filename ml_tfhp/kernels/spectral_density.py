@@ -21,7 +21,7 @@ def spectral_density_ml(
     phi(t) = t^(alpha - 1) * E_{alpha, alpha}(- (beta * t)^alpha).
 
     Derived via Stieltjes transform inversion of L{phi}(s) = 1 / (s^alpha + beta^alpha):
-        rho_alpha(xi) = (1 / pi) * [beta^alpha * sin(pi * alpha) * xi^alpha] /
+        rho_alpha(xi) = (1 / pi) * [sin(pi * alpha) * xi^alpha] /
                         [xi^(2 * alpha) + 2 * beta^alpha * xi^alpha * cos(pi * alpha) + beta^(2 * alpha)]
 
     Parameters
@@ -48,8 +48,8 @@ def spectral_density_ml(
     xi_a = xi_arr ** alpha
     xi_2a = xi_a ** 2
     
-    # Numerator is beta^alpha * sin(pi * alpha) * xi^alpha
-    num = (1.0 / np.pi) * beta_a * sin_pa * xi_a
+    # Numerator is sin(pi * alpha) * xi^alpha (exact Bromwich cut inversion)
+    num = (1.0 / np.pi) * sin_pa * xi_a
     denom = xi_2a + 2.0 * beta_a * xi_a * cos_pa + beta_2a
     
     denom = np.maximum(denom, 1e-30)

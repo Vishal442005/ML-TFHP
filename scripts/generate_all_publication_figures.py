@@ -19,15 +19,29 @@ from ml_tfhp.models.exponential_hawkes import ExponentialHawkesModel
 from ml_tfhp.models.bivariate_ml_tfhp import BivariateMLTFHPModel
 from ml_tfhp.kernels.quadrature import compute_log_quadrature, approximate_kernel
 from ml_tfhp.kernels.spectral_density import spectral_density_ml as spectral_density
+from ml_tfhp.kernels.mittag_leffler import ml_tfhp_kernel_exact
 from ml_tfhp.data.event_extractor import extract_peaks_over_threshold
 from ml_tfhp.evaluation.var_backtest import backtest_hawkes_var
 from ml_tfhp.evaluation.forecasting import evaluate_multi_horizon_forecasting
 from ml_tfhp.evaluation.diagnostics import compute_qq_plot_data
 
 # Ensure output directories
-os.makedirs("figures", exist_ok=True)
-os.makedirs("submission_tex/figures", exist_ok=True)
-os.makedirs("reports/figures", exist_ok=True)
+for d in ["figures", "submission_tex/figures", "reports/figures", "elsevier_submission", "elseiver_submission", "wiley_submission"]:
+    os.makedirs(d, exist_ok=True)
+
+def copy_to_all_destinations(src_path, filename):
+    dests = [
+        "submission_tex/figures",
+        "reports/figures",
+        "elsevier_submission",
+        "elseiver_submission",
+        "wiley_submission"
+    ]
+    for d in dests:
+        try:
+            shutil.copy(src_path, os.path.join(d, filename))
+        except Exception as e:
+            print(f"Warning: could not copy to {d}: {e}")
 
 # -----------------------------------------------------------------------------
 # GLOBAL TYPOGRAPHY: INCREASED BY 1.3X FOR OPTIMAL READABILITY
@@ -81,37 +95,38 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15.2, 6.2), dpi=300)
 
 t_arr = np.logspace(-4, 3, 1000)
 
-# ML-TFHP kernel via quadrature
+# Exact analytical continuous kernels
+phi_mltfhp_exact = ml_tfhp_kernel_exact(t_arr, mu_ml, alpha_ml, beta_ml, gamma_ml, eta_ml)
+phi_mltfhp_exact = np.maximum(phi_mltfhp_exact, 1e-12)
+
+phi_untempered_exact = ml_tfhp_kernel_exact(t_arr, mu_ml, alpha_ml, beta_ml, 0.0, eta_ml)
+phi_untempered_exact = np.maximum(phi_untempered_exact, 1e-12)
+
+# ML-TFHP kernel via 16-mode state-space quadrature
 weights, zetas = compute_log_quadrature(
     alpha=alpha_ml, beta=beta_ml, gamma_param=gamma_ml, eta=eta_ml,
     M=16, xi_min=1e-4, xi_max=1e2
 )
-phi_mltfhp = approximate_kernel(t_arr, weights, zetas)
+phi_mltfhp_quad = approximate_kernel(t_arr, weights, zetas)
 
 # Exponential kernel
 phi_exp = alpha_exp * np.exp(-beta_exp * t_arr)
-
-# Untempered Fractional kernel (gamma = 0)
-weights_untempered, zetas_untempered = compute_log_quadrature(
-    alpha=alpha_ml, beta=beta_ml, gamma_param=0.0, eta=eta_ml,
-    M=16, xi_min=1e-4, xi_max=1e2
-)
-phi_untempered = approximate_kernel(t_arr, weights_untempered, zetas_untempered)
 
 # Power-law kernel
 c_pl = 0.01
 phi_pl = 0.5 * (t_arr + c_pl)**(-(1.0 + alpha_ml))
 
 # Plot Panel A: Kernel Comparison
-ax1.loglog(t_arr, phi_mltfhp, color="#1E40AF", lw=3.0, label=r"ML-TFHP $\phi(t)$ (Ours)")
-ax1.loglog(t_arr, phi_untempered, color="#D97706", ls="--", lw=2.4, label=r"Untempered ($\gamma=0$)")
-ax1.loglog(t_arr, phi_exp, color="#DC2626", ls=":", lw=2.6, label=r"Exponential Hawkes ($e^{-\beta t}$)")
-ax1.loglog(t_arr, phi_pl, color="#059669", ls="-.", lw=2.2, label=r"Power-Law $(t+c)^{-(1+\delta)}$")
+ax1.loglog(t_arr, phi_mltfhp_exact, color="#1E40AF", lw=3.0, label=r"ML-TFHP $\phi(t)$ (Exact)")
+ax1.loglog(t_arr, phi_mltfhp_quad, color="#3B82F6", ls="--", lw=1.8, label=r"Quadrature $\phi_M(t)$ ($M=16$)")
+ax1.loglog(t_arr, phi_untempered_exact, color="#D97706", ls="-.", lw=2.2, label=r"Untempered ($\gamma=0$)")
+ax1.loglog(t_arr, phi_exp, color="#DC2626", ls=":", lw=2.4, label=r"Exponential Hawkes ($e^{-\beta t}$)")
+ax1.loglog(t_arr, phi_pl, color="#059669", ls=(0, (3, 1, 1, 1)), lw=2.0, label=r"Power-Law $(t+c)^{-(1+\alpha)}$")
 
 # Annotate regimes
-ax1.axvspan(1e-4, 1.0/beta_ml, color="#DBEAFE", alpha=0.35, label="Regime I: Sub-diffusive ($t \\ll \\beta^{-1}$)")
-ax1.axvspan(1.0/beta_ml, 1.0/gamma_ml, color="#FEF3C7", alpha=0.35, label="Regime II: Power Law ($t^{-(1+\\alpha)}$)")
-ax1.axvspan(1.0/gamma_ml, 1e3, color="#FEE2E2", alpha=0.35, label="Regime III: Macro Tempering ($e^{-\\gamma t}$)")
+ax1.axvspan(1e-4, 1.0/beta_ml, color="#DBEAFE", alpha=0.35, label=r"Regime I: Sub-diffusive ($t^{\alpha-1}$)")
+ax1.axvspan(1.0/beta_ml, 1.0/gamma_ml, color="#FEF3C7", alpha=0.35, label=r"Regime II: Power Law ($t^{-(1+\alpha)}$)")
+ax1.axvspan(1.0/gamma_ml, 1e3, color="#FEE2E2", alpha=0.35, label=r"Regime III: Macro Tempering ($e^{-\gamma t}$)")
 
 ax1.set_xlabel("Time Elapsed $t$ (seconds)", fontsize=16, fontweight="bold")
 ax1.set_ylabel(r"Memory Kernel $\phi(t)$", fontsize=16, fontweight="bold")
@@ -119,7 +134,7 @@ ax1.set_title("(a) Multi-Scale Kernel Relaxation Across 7 Decades", fontsize=17,
 ax1.grid(True, which="both", ls="--", alpha=0.35)
 ax1.set_ylim([1e-6, 1e2])
 ax1.tick_params(axis='both', which='major', labelsize=14)
-ax1.legend(loc="lower left", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=12.5)
+ax1.legend(loc="lower left", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=12.0)
 
 # Plot Panel B: Continuous Spectral Density & Quadrature Modes
 xi_grid = np.logspace(-4, 2, 800)
@@ -141,8 +156,9 @@ ax2.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CB
 plt.tight_layout(pad=1.5)
 fig1_path = "figures/fig1_kernel_mechanics.pdf"
 plt.savefig(fig1_path)
-shutil.copy(fig1_path, "submission_tex/figures/fig1_kernel_mechanics.pdf")
-shutil.copy(fig1_path, "reports/figures/fig1_kernel_mechanics.pdf")
+copy_to_all_destinations(fig1_path, "fig1_kernel_mechanics.pdf")
+plt.close()
+print(f"Saved: {fig1_path}")
 plt.close()
 print(f"Saved: {fig1_path}")
 
@@ -160,10 +176,16 @@ weights_psi, zetas_psi = compute_log_quadrature(
     alpha=alpha_ml, beta=beta_tilde, gamma_param=gamma_ml, eta=eta_ml,
     M=16, xi_min=1e-4, xi_max=1e2
 )
-psi_mltfhp = approximate_kernel(t_arr, weights_psi, zetas_psi)
 
-ax1.loglog(t_arr, phi_mltfhp, color="#1E40AF", lw=2.8, label=r"Bare Kernel $\phi(t)$")
-ax1.loglog(t_arr, psi_mltfhp, color="#DC2626", lw=2.8, ls="--", label=r"Resolvent Kernel $\psi(t)$ [Wiener-Hopf]")
+# Exact analytical bare kernel and resolvent kernel (Theorem 2)
+phi_bare_exact = ml_tfhp_kernel_exact(t_arr, mu_ml, alpha_ml, beta_ml, gamma_ml, eta_ml)
+phi_bare_exact = np.maximum(phi_bare_exact, 1e-12)
+
+psi_exact = ml_tfhp_kernel_exact(t_arr, mu_ml, alpha_ml, beta_tilde, gamma_ml, eta_ml)
+psi_exact = np.maximum(psi_exact, 1e-12)
+
+ax1.loglog(t_arr, phi_bare_exact, color="#1E40AF", lw=2.8, label=r"Bare Kernel $\phi(t)$ (Exact)")
+ax1.loglog(t_arr, psi_exact, color="#DC2626", lw=2.8, ls="--", label=r"Resolvent Kernel $\psi(t)$ [Wiener-Hopf]")
 
 ax1.set_xlabel("Time Horizon $t$ (seconds)", fontsize=16, fontweight="bold")
 ax1.set_ylabel("Kernel Amplitude", fontsize=16, fontweight="bold")
@@ -206,7 +228,7 @@ ax2.annotate(
 
 ax2.set_xlabel(r"Aggregation Interval $\tau$ (seconds)", fontsize=16, fontweight="bold")
 ax2.set_ylabel(r"Realized Variance $\mathcal{V}(\tau)$", fontsize=16, fontweight="bold")
-ax2.set_title("(b) Volatility Signature Plot & Reflexivity", fontsize=17, fontweight="bold")
+ax2.set_title("(b) Volatility Signature Plot and Reflexivity", fontsize=17, fontweight="bold")
 ax2.grid(True, which="both", ls="--", alpha=0.35)
 ax2.set_ylim([4.2, 13.0])
 ax2.tick_params(axis='both', which='major', labelsize=14)
@@ -214,11 +236,9 @@ ax2.tick_params(axis='both', which='major', labelsize=14)
 plt.tight_layout(pad=1.5)
 fig2_path = "figures/fig2_resolvent_and_signature_plot.pdf"
 plt.savefig(fig2_path)
-shutil.copy(fig2_path, "submission_tex/figures/fig2_resolvent_and_signature_plot.pdf")
-shutil.copy(fig2_path, "reports/figures/fig2_resolvent_and_signature_plot.pdf")
-shutil.copy(fig2_path, "wiley_submission/fig2_resolvent_and_signature_plot.pdf")
-shutil.copy(fig2_path, "elsevier_submission/fig2_resolvent_and_signature_plot.pdf")
-shutil.copy(fig2_path, "elseiver_submission/fig2_resolvent_and_signature_plot.pdf")
+copy_to_all_destinations(fig2_path, "fig2_resolvent_and_signature_plot.pdf")
+plt.close()
+print(f"Saved: {fig2_path}")
 plt.close()
 print(f"Saved: {fig2_path}")
 
@@ -295,8 +315,7 @@ ax2.legend(loc="upper left", framealpha=0.92, facecolor="white", edgecolor="#CBD
 plt.tight_layout(pad=1.5)
 fig3_path = "figures/multi_horizon_forecasting_crossover.pdf"
 plt.savefig(fig3_path)
-shutil.copy(fig3_path, "submission_tex/figures/multi_horizon_forecasting_crossover.pdf")
-shutil.copy(fig3_path, "reports/figures/multi_horizon_forecasting_crossover.pdf")
+copy_to_all_destinations(fig3_path, "multi_horizon_forecasting_crossover.pdf")
 plt.close()
 print(f"Saved: {fig3_path}")
 
@@ -346,8 +365,7 @@ ax_bot.legend(loc="center right", framealpha=0.92, facecolor="white", edgecolor=
 plt.tight_layout(pad=1.5)
 fig4_path = "figures/intensity_comparison.pdf"
 plt.savefig(fig4_path)
-shutil.copy(fig4_path, "submission_tex/figures/intensity_comparison.pdf")
-shutil.copy(fig4_path, "reports/figures/intensity_comparison.pdf")
+copy_to_all_destinations(fig4_path, "intensity_comparison.pdf")
 plt.close()
 print(f"Saved: {fig4_path}")
 
@@ -409,7 +427,7 @@ ax2.set_xlabel("Lag $k$ (Event Index)", fontsize=16, fontweight="bold")
 ax2.set_ylabel("Autocorrelation $\\hat{\\rho}(k)$", fontsize=16, fontweight="bold")
 ax2.set_title("(b) Papangelou Residual Autocorrelation (ACF)", fontsize=17, fontweight="bold")
 ax2.set_xlim([0, max_lag + 1])
-ax2.set_ylim([-0.06, 0.08])
+ax2.set_ylim([-0.05, 0.22])
 ax2.grid(True, ls="--", alpha=0.35)
 ax2.tick_params(axis='both', which='major', labelsize=14)
 ax2.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
@@ -417,8 +435,7 @@ ax2.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CB
 plt.tight_layout(pad=1.5)
 fig5_path = "figures/qq_plot_comparison.pdf"
 plt.savefig(fig5_path)
-shutil.copy(fig5_path, "submission_tex/figures/qq_plot_comparison.pdf")
-shutil.copy(fig5_path, "reports/figures/qq_plot_comparison.pdf")
+copy_to_all_destinations(fig5_path, "qq_plot_comparison.pdf")
 plt.close()
 print(f"Saved: {fig5_path}")
 
@@ -434,15 +451,14 @@ ax_acf.set_xlabel("Lag $k$ (Event Index)", fontsize=16, fontweight="bold")
 ax_acf.set_ylabel("Autocorrelation $\\hat{\\rho}(k)$", fontsize=16, fontweight="bold")
 ax_acf.set_title("Papangelou Residual Autocorrelation (ACF)", fontsize=17, fontweight="bold")
 ax_acf.set_xlim([0, max_lag + 1])
-ax_acf.set_ylim([-0.06, 0.08])
+ax_acf.set_ylim([-0.05, 0.22])
 ax_acf.grid(True, ls="--", alpha=0.35)
 ax_acf.tick_params(axis='both', which='major', labelsize=14)
 ax_acf.legend(loc="upper right", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=13)
 plt.tight_layout(pad=1.5)
 fig_acf_path = "figures/residuals_acf.pdf"
 plt.savefig(fig_acf_path)
-shutil.copy(fig_acf_path, "submission_tex/figures/residuals_acf.pdf")
-shutil.copy(fig_acf_path, "reports/figures/residuals_acf.pdf")
+copy_to_all_destinations(fig_acf_path, "residuals_acf.pdf")
 plt.close()
 print(f"Saved: {fig_acf_path}")
 
@@ -507,11 +523,7 @@ ax.legend(loc="lower right", framealpha=0.92, facecolor="white", edgecolor="#CBD
 plt.tight_layout(pad=1.5)
 fig6_path = "figures/fig6_frtb_var_expected_shortfall.pdf"
 plt.savefig(fig6_path)
-shutil.copy(fig6_path, "submission_tex/figures/fig6_frtb_var_expected_shortfall.pdf")
-shutil.copy(fig6_path, "reports/figures/fig6_frtb_var_expected_shortfall.pdf")
-shutil.copy(fig6_path, "wiley_submission/fig6_frtb_var_expected_shortfall.pdf")
-shutil.copy(fig6_path, "elsevier_submission/fig6_frtb_var_expected_shortfall.pdf")
-shutil.copy(fig6_path, "elseiver_submission/fig6_frtb_var_expected_shortfall.pdf")
+copy_to_all_destinations(fig6_path, "fig6_frtb_var_expected_shortfall.pdf")
 plt.close()
 print(f"Saved: {fig6_path}")
 
@@ -597,8 +609,7 @@ ax2.text(0.5, -0.24,
 plt.tight_layout(pad=1.5)
 fig7_path = "figures/fig7_bivariate_order_flow.pdf"
 plt.savefig(fig7_path)
-shutil.copy(fig7_path, "submission_tex/figures/fig7_bivariate_order_flow.pdf")
-shutil.copy(fig7_path, "reports/figures/fig7_bivariate_order_flow.pdf")
+copy_to_all_destinations(fig7_path, "fig7_bivariate_order_flow.pdf")
 plt.close()
 print(f"Saved: {fig7_path}")
 
