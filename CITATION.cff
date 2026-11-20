@@ -5,8 +5,8 @@ authors:
   - family-names: "Chandel"
     given-names: "Vishal"
     orcid: "https://orcid.org/0009-0006-0552-8551"
-version: 1.3.0
-date-released: 2026-11-05
+version: 1.5.0
+date-released: 2026-11-20
 url: "https://github.com/Vishal442005/ML-TFHP"
 keywords:
   - "Fractional Hawkes processes"

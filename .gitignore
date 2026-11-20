@@ -52,6 +52,14 @@ elseiver_submission/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+literature/txt/
+literature/*.txt
+reviewer2_dossier*.txt
+scripts/test_*.py
+scripts/apply_manuscript_updates.py
+scripts/extract_paper_*.py
+scripts/add_fig_refs.py
+scripts/fix_caption.py
 paper.*
 manuscript.*
 submission_tables.*
