@@ -31,7 +31,7 @@ from scipy.stats import linregress
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Circle
+from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Circle, Rectangle, Wedge
 from matplotlib.gridspec import GridSpec
 
 # Model & math imports
@@ -117,254 +117,340 @@ print(f"  EHP: mu={mu_exp:.3f}, alpha={alpha_exp:.3f}, beta={beta_exp:.3f}, n*={
 # =============================================================================
 print("\n--- Generating Figure 1: System Architecture & Computational Pipeline ---")
 def generate_figure_1():
-    fig = plt.figure(figsize=(20.0, 10.0), dpi=300)
+    fig = plt.figure(figsize=(20.0, 10.2), dpi=300)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 100)
     ax.axis('off')
     fig.patch.set_facecolor('#FFFFFF')
 
-    # Title & Subtitle with generous clearance
-    ax.text(50, 97.2, "Mittag-Leffler Tempered Fractional Hawkes Process (ML-TFHP): System Architecture",
+    # Top Title & Subtitle
+    ax.text(50, 97.4, "Mittag-Leffler Tempered Fractional Hawkes Process (ML-TFHP): System Architecture",
             ha='center', va='center', fontsize=18, fontweight='bold', color='#0F172A')
-    ax.text(50, 93.6, r"Unified Mathematical Pipeline: Microstructure Telemetry $\longrightarrow$ Caputo Relaxation $\longrightarrow$ $\mathcal{O}(NM)$ State-Space $\longrightarrow$ MLE $\longrightarrow$ Basel FRTB Risk Control",
+    ax.text(50, 94.0, r"Unified Mathematical Pipeline: Microstructure Telemetry $\longrightarrow$ Caputo Relaxation $\longrightarrow$ $\mathcal{O}(NM)$ State-Space $\longrightarrow$ MLE $\longrightarrow$ Basel FRTB Risk Control",
             ha='center', va='center', fontsize=11.5, style='italic', color='#475569')
 
     stages = [
-        {"id": 1, "x": 2.5, "w": 16.5, "title": "STAGE 1: MICROSTRUCTURE\nDATA INGESTION", "badge": "Empirical Telemetry", "badge_col": "#0284C7"},
-        {"id": 2, "x": 22.0, "w": 16.5, "title": "STAGE 2: FRACTIONAL\nKERNEL RELAXATION", "badge": "Caputo Operator Theory", "badge_col": "#D97706"},
-        {"id": 3, "x": 41.5, "w": 17.0, "title": "STAGE 3: SPECTRAL INVERSION\n& MARKOVIAN EMBEDDING", "badge": "O(NM) State-Space", "badge_col": "#2563EB"},
-        {"id": 4, "x": 61.5, "w": 16.5, "title": "STAGE 4: RECURSIVE LIKELIHOOD\nINFERENCE ENGINE", "badge": "Exact O(NM) MLE", "badge_col": "#059669"},
-        {"id": 5, "x": 81.0, "w": 16.5, "title": "STAGE 5: MICROSTRUCTURE\n& RISK ANALYTICS", "badge": "Downstream Physics", "badge_col": "#7C3AED"},
+        {"id": 1, "x": 2.2, "w": 16.8, "title": "STAGE 1: MICROSTRUCTURE\nDATA INGESTION", "badge": "Empirical Telemetry", "badge_col": "#0284C7"},
+        {"id": 2, "x": 21.8, "w": 16.8, "title": "STAGE 2: FRACTIONAL\nKERNEL RELAXATION", "badge": "Caputo Operator Theory", "badge_col": "#D97706"},
+        {"id": 3, "x": 41.4, "w": 17.2, "title": "STAGE 3: SPECTRAL INVERSION\n& MARKOVIAN EMBEDDING", "badge": "O(NM) State-Space", "badge_col": "#2563EB"},
+        {"id": 4, "x": 61.4, "w": 16.8, "title": "STAGE 4: RECURSIVE LIKELIHOOD\nINFERENCE ENGINE", "badge": "Exact O(NM) MLE", "badge_col": "#059669"},
+        {"id": 5, "x": 81.0, "w": 16.8, "title": "STAGE 5: MICROSTRUCTURE\n& RISK ANALYTICS", "badge": "Downstream Physics", "badge_col": "#7C3AED"},
     ]
 
     for st in stages:
         x, w = st["x"], st["w"]
-        # Strictly Black and White Outer Container Box
-        box = FancyBboxPatch((x, 4.5), w, 85.5, boxstyle="round,pad=0.5,rounding_size=1.2",
+        # Crisp Black & White Outer Structural Box
+        box = FancyBboxPatch((x, 4.5), w, 86.0, boxstyle="round,pad=0.5,rounding_size=1.2",
                              facecolor="#FFFFFF", edgecolor="#000000", linewidth=2.2, zorder=2)
         ax.add_patch(box)
 
-        hdr_box = FancyBboxPatch((x + 0.6, 82.5), w - 1.2, 6.2, boxstyle="round,pad=0.2,rounding_size=0.5",
+        # Stage Header Box
+        hdr_box = FancyBboxPatch((x + 0.6, 83.0), w - 1.2, 6.2, boxstyle="round,pad=0.2,rounding_size=0.5",
                                  facecolor="#F8FAFC", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
         ax.add_patch(hdr_box)
         lines = st["title"].split('\n')
-        ax.text(x + w/2.0, 86.6, lines[0], ha='center', va='center', fontsize=9.8, fontweight='bold', color='#0F172A', zorder=4)
-        ax.text(x + w/2.0, 84.0, lines[1], ha='center', va='center', fontsize=9.8, fontweight='bold', color='#0F172A', zorder=4)
+        ax.text(x + w/2.0, 87.1, lines[0], ha='center', va='center', fontsize=9.8, fontweight='bold', color='#0F172A', zorder=4)
+        ax.text(x + w/2.0, 84.5, lines[1], ha='center', va='center', fontsize=9.8, fontweight='bold', color='#0F172A', zorder=4)
 
-        badge = FancyBboxPatch((x + w/2.0 - 5.5, 79.5), 11.0, 2.2, boxstyle="round,pad=0.2,rounding_size=0.4",
+        # Stage Badge
+        badge = FancyBboxPatch((x + w/2.0 - 5.5, 80.0), 11.0, 2.2, boxstyle="round,pad=0.2,rounding_size=0.4",
                                facecolor=st["badge_col"], edgecolor="none", zorder=4)
         ax.add_patch(badge)
-        ax.text(x + w/2.0, 80.6, st["badge"], ha='center', va='center', fontsize=8.8, fontweight='bold', color='#FFFFFF', zorder=5)
+        ax.text(x + w/2.0, 81.1, st["badge"], ha='center', va='center', fontsize=8.8, fontweight='bold', color='#FFFFFF', zorder=5)
 
-    # ---------------- STAGE 1: INGESTION ----------------
-    x1, w1 = 2.5, 16.5
-    c1_box = FancyBboxPatch((x1 + 0.8, 51.0), w1 - 1.6, 26.5, boxstyle="round,pad=0.4",
-                            facecolor="#F1F5F9", edgecolor="#94A3B8", linewidth=1.0, zorder=3)
-    ax.add_patch(c1_box)
-    ax.text(x1 + w1/2.0, 75.2, "Live Binance L3 Tick Stream", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1E293B', zorder=4)
-    px = np.linspace(x1 + 1.8, x1 + w1 - 1.8, 25)
-    py = 63.5 + 2.5 * np.sin(np.linspace(0, 3.5, 25)) + np.array([0, 0.4, -0.3, 0.6, -0.5, 0.2, 0.7, -0.4, 0.3, 0.9,
+    # =========================================================================
+    # STAGE 1: MICROSTRUCTURE DATA INGESTION
+    # =========================================================================
+    x1, w1 = 2.2, 16.8
+    # 1A: Tick Stream Waveform Plot
+    w_box = FancyBboxPatch((x1 + 0.8, 52.5), w1 - 1.6, 25.5, boxstyle="round,pad=0.3",
+                           facecolor="#F8FAFC", edgecolor="#94A3B8", linewidth=1.0, zorder=3)
+    ax.add_patch(w_box)
+    ax.text(x1 + w1/2.0, 75.8, "Live Tick Arrival Stream", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E293B', zorder=4)
+
+    # Waveform curve
+    px = np.linspace(x1 + 1.8, x1 + w1 - 1.8, 30)
+    py = 64.5 + 2.8 * np.sin(np.linspace(0, 4.0, 30)) + np.array([0, 0.4, -0.3, 0.6, -0.5, 0.2, 0.7, -0.4, 0.3, 0.9,
                                                                     -0.4, 0.1, 0.5, -0.6, 0.3, 0.8, -0.2, 0.4, 0.6, -0.3,
-                                                                    0.5, 0.8, -0.2, 0.3, 0.5])
+                                                                    0.5, 0.8, -0.2, 0.3, 0.5, -0.4, 0.2, 0.6, -0.3, 0.4])
     ax.plot(px, py, color="#64748B", lw=1.6, zorder=4)
-    for idx in [4, 10, 16, 21]:
-        ax.annotate('', xy=(px[idx], py[idx] + 2.2), xytext=(px[idx], py[idx]),
-                    arrowprops=dict(arrowstyle="->", color="#16A34A", lw=2.0), zorder=5)
-        ax.text(px[idx], py[idx] + 3.1, r"$+1$", ha='center', va='center', fontsize=8.0, fontweight='bold', color="#16A34A")
-    for idx in [7, 13, 19]:
-        ax.annotate('', xy=(px[idx], py[idx] - 2.2), xytext=(px[idx], py[idx]),
-                    arrowprops=dict(arrowstyle="->", color="#DC2626", lw=2.0), zorder=5)
-        ax.text(px[idx], py[idx] - 3.1, r"$-1$", ha='center', va='center', fontsize=8.0, fontweight='bold', color="#DC2626")
-    ax.text(x1 + w1/2.0, 53.2, r"Timestamps $t_i$, Durations $\Delta t_i = t_i - t_{i-1}$", ha='center', va='center', fontsize=8.5, color='#334155', zorder=4)
+    # Impulses (+1 Buy, -1 Sell)
+    for idx in [5, 12, 19, 26]:
+        ax.annotate('', xy=(px[idx], py[idx] + 2.4), xytext=(px[idx], py[idx]),
+                    arrowprops=dict(arrowstyle="->", color="#16A34A", lw=2.2), zorder=5)
+        ax.text(px[idx], py[idx] + 3.4, "+1", ha='center', va='center', fontsize=8.2, fontweight='bold', color="#16A34A")
+    for idx in [8, 16, 23]:
+        ax.annotate('', xy=(px[idx], py[idx] - 2.4), xytext=(px[idx], py[idx]),
+                    arrowprops=dict(arrowstyle="->", color="#DC2626", lw=2.2), zorder=5)
+        ax.text(px[idx], py[idx] - 3.4, "-1", ha='center', va='center', fontsize=8.2, fontweight='bold', color="#DC2626")
+    ax.text(x1 + w1/2.0, 54.5, r"Timestamps $t_i$, Durations $\Delta t_i = t_i - t_{i-1}$", ha='center', va='center', fontsize=8.2, color='#475569', zorder=4)
 
-    obs_box = FancyBboxPatch((x1 + 0.8, 6.5), w1 - 1.6, 42.0, boxstyle="round,pad=0.4",
-                             facecolor="#FFFFFF", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
-    ax.add_patch(obs_box)
-    ax.text(x1 + w1/2.0, 46.0, "Extracted Observables", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1E293B', zorder=4)
-    vars_info = [
-        (r"$\bullet$ Trade Events: $\{t_i\}_{i=1}^N \subset [0, T]$", "#0F172A"),
-        (r"$\bullet$ Order Signs: $\epsilon_i \in \{-1, +1\}$", "#2563EB"),
-        (r"  (Taker Buy = $+1$, Taker Sell = $-1$)", "#64748B"),
-        (r"$\bullet$ Log-Loss: $L_t = -\Delta\ln P_t$", "#DC2626"),
-        (r"$\bullet$ Empirical Sample: $N=10,000$", "#0F172A"),
-        (r"  ($T = 2,502.5\text{ s} \approx 41.7\text{ min}$)", "#475569"),
-        (r"$\bullet$ Microstructure noise: $\Delta t \geq 0$", "#475569"),
-        (r"$\bullet$ Order Flow Imbalance: OFI", "#0F172A")
-    ]
-    y_pos = 42.0
-    for text, col in vars_info:
-        ax.text(x1 + 1.8, y_pos, text, ha='left', va='center', fontsize=8.8, color=col, zorder=4)
-        y_pos -= 4.4
+    # 1B: Limit Order Book (LOB) Depth Ladder Diagram
+    lob_box = FancyBboxPatch((x1 + 0.8, 6.5), w1 - 1.6, 44.0, boxstyle="round,pad=0.3",
+                            facecolor="#FFFFFF", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
+    ax.add_patch(lob_box)
+    ax.text(x1 + w1/2.0, 48.2, "L3 Limit Order Book Ladder", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E293B', zorder=4)
 
-    # ---------------- STAGE 2: FRACTIONAL KERNEL ----------------
-    x2, w2 = 22.0, 16.5
-    k_box = FancyBboxPatch((x2 + 0.8, 51.0), w2 - 1.6, 26.5, boxstyle="round,pad=0.4",
-                           facecolor="#FEF3C7", edgecolor="#F59E0B", linewidth=1.0, zorder=3)
-    ax.add_patch(k_box)
-    ax.text(x2 + w2/2.0, 75.2, "Mittag-Leffler Kernel", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#92400E', zorder=4)
-    ax.text(x2 + w2/2.0, 70.0, r"$\phi(t) = \eta e^{-\gamma t} t^{\alpha-1} E_{\alpha,\alpha}(-\beta^\alpha t^\alpha)$",
-            ha='center', va='center', fontsize=9.2, fontweight='bold', color='#78350F', zorder=4)
-    ax.text(x2 + w2/2.0, 64.5, "Caputo Fractional Operator:", ha='center', va='center', fontsize=8.5, fontweight='bold', color='#92400E', zorder=4)
-    ax.text(x2 + w2/2.0, 59.8, r"${}^C D_t^\alpha f(t) = \frac{1}{\Gamma(1-\alpha)}\int_0^t \frac{f'(s)}{(t-s)^\alpha}ds$",
-            ha='center', va='center', fontsize=8.5, color='#92400E', zorder=4)
-    ax.text(x2 + w2/2.0, 53.2, r"Exact $L^1$-Integrable Relaxation", ha='center', va='center', fontsize=8.8, fontweight='bold', color='#B45309', zorder=4)
+    # Draw Bid / Ask Depth Bars
+    asks = [(78036, 4.2), (78034, 3.1), (78032, 1.8)]
+    bids = [(78030, 2.0), (78028, 3.5), (78026, 4.8)]
 
-    reg_box = FancyBboxPatch((x2 + 0.8, 6.5), w2 - 1.6, 42.0, boxstyle="round,pad=0.4",
+    # Draw Ladder
+    y_lob = 44.0
+    for p, v in asks:
+        ax.barh(y_lob, v, left=x1 + w1/2.0 + 0.2, height=2.2, color="#FCA5A5", edgecolor="#DC2626", lw=1.0, zorder=4)
+        ax.text(x1 + w1/2.0 - 0.4, y_lob, f"${p}", ha="right", va="center", fontsize=7.8, fontweight="bold", color="#DC2626", zorder=5)
+        ax.text(x1 + w1/2.0 + v + 0.6, y_lob, f"{v:.1f}", ha="left", va="center", fontsize=7.2, color="#991B1B", zorder=5)
+        y_lob -= 3.2
+
+    # Spread indicator
+    ax.plot([x1 + 2.5, x1 + w1 - 2.5], [y_lob + 0.5, y_lob + 0.5], color="#94A3B8", ls=":", lw=1.2, zorder=4)
+    ax.text(x1 + w1/2.0, y_lob + 0.5, "Spread $S_t = \\$2.00$", ha="center", va="center", fontsize=7.6, fontweight="bold", color="#64748B",
+            bbox=dict(boxstyle="round,pad=0.2", facecolor="#F8FAFC", edgecolor="#CBD5E1", lw=0.8), zorder=5)
+    y_lob -= 2.6
+
+    for p, v in bids:
+        ax.barh(y_lob, v, left=x1 + w1/2.0 - 0.2 - v, height=2.2, color="#86EFAC", edgecolor="#16A34A", lw=1.0, zorder=4)
+        ax.text(x1 + w1/2.0 + 0.4, y_lob, f"${p}", ha="left", va="center", fontsize=7.8, fontweight="bold", color="#16A34A", zorder=5)
+        ax.text(x1 + w1/2.0 - v - 0.6, y_lob, f"{v:.1f}", ha="right", va="center", fontsize=7.2, color="#166534", zorder=5)
+        y_lob -= 3.2
+
+    # Telemetry Badge Box
+    t_box = FancyBboxPatch((x1 + 1.2, 8.0), w1 - 2.4, 11.5, boxstyle="round,pad=0.2",
+                           facecolor="#F1F5F9", edgecolor="#94A3B8", linewidth=0.8, zorder=4)
+    ax.add_patch(t_box)
+    ax.text(x1 + w1/2.0, 16.5, "Binance BTC/USDT Telemetry", ha='center', va='center', fontsize=8.6, fontweight='bold', color='#0F172A', zorder=5)
+    ax.text(x1 + w1/2.0, 13.0, r"$N = 10,000$ Real Trades ($T = 2,502.5\text{ s}$)", ha='center', va='center', fontsize=8.0, color='#334155', zorder=5)
+    ax.text(x1 + w1/2.0, 9.8, r"Trade Signs $\epsilon_i \in \{-1, +1\}$, Returns $r_t$", ha='center', va='center', fontsize=8.0, color='#0369A1', zorder=5)
+
+    # =========================================================================
+    # STAGE 2: FRACTIONAL KERNEL RELAXATION
+    # =========================================================================
+    x2, w2 = 21.8, 16.8
+    # 2A: Mittag-Leffler Operator Box
+    ml_box = FancyBboxPatch((x2 + 0.8, 52.5), w2 - 1.6, 25.5, boxstyle="round,pad=0.3",
+                            facecolor="#FFFBEB", edgecolor="#F59E0B", linewidth=1.0, zorder=3)
+    ax.add_patch(ml_box)
+    ax.text(x2 + w2/2.0, 75.8, "Mittag-Leffler Kernel", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#92400E', zorder=4)
+    ax.text(x2 + w2/2.0, 71.2, r"$\phi(t) = \eta e^{-\gamma t} t^{\alpha-1} E_{\alpha,\alpha}(-\beta^\alpha t^\alpha)$",
+            ha='center', va='center', fontsize=8.8, fontweight='bold', color='#78350F', zorder=4)
+    ax.text(x2 + w2/2.0, 66.2, "Caputo Fractional Operator:", ha='center', va='center', fontsize=8.2, fontweight='bold', color='#92400E', zorder=4)
+    ax.text(x2 + w2/2.0, 61.8, r"${}^C D_t^\alpha f(t) = \frac{1}{\Gamma(1-\alpha)} \int_{[0, t]} (t-s)^{-\alpha} f'(s)\,ds$",
+            ha='center', va='center', fontsize=7.8, color='#92400E', zorder=4)
+    ax.text(x2 + w2/2.0, 55.5, r"Constitutive Memory Relaxation", ha='center', va='center', fontsize=8.2, fontweight='bold', color='#B45309', zorder=4)
+
+    # 2B: 3-Regime Visual Memory Plot
+    reg_box = FancyBboxPatch((x2 + 0.8, 6.5), w2 - 1.6, 44.0, boxstyle="round,pad=0.3",
                              facecolor="#FFFFFF", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
     ax.add_patch(reg_box)
-    ax.text(x2 + w2/2.0, 46.0, "3-Regime Memory Cascade", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1E293B', zorder=4)
-    cx = np.linspace(x2 + 2.0, x2 + w2 - 2.0, 30)
-    cy = 38.0 - 5.0 * (cx - (x2 + 2.0)) / (w2 - 4.0)
-    cy[cx > x2 + 10.0] -= 7.0 * ((cx[cx > x2 + 10.0] - (x2 + 10.0)) / (w2 - 12.0))**1.8
-    ax.plot(cx, cy, color="#B45309", lw=2.2, zorder=4)
-    ax.axvline(x2 + 6.0, ymin=0.31, ymax=0.41, color="#94A3B8", ls=":", lw=1.2)
-    ax.axvline(x2 + 11.0, ymin=0.25, ymax=0.41, color="#94A3B8", ls=":", lw=1.2)
-    ax.text(x2 + 4.0, 40.5, "Regime I", ha='center', va='bottom', fontsize=7.8, color="#0369A1", fontweight='bold')
-    ax.text(x2 + 8.5, 40.5, "Regime II", ha='center', va='bottom', fontsize=7.8, color="#B45309", fontweight='bold')
-    ax.text(x2 + 13.5, 40.5, "Regime III", ha='center', va='bottom', fontsize=7.8, color="#DC2626", fontweight='bold')
+    ax.text(x2 + w2/2.0, 48.2, "3-Regime Relaxation Dynamics", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E293B', zorder=4)
 
-    stat_box = FancyBboxPatch((x2 + 1.5, 8.5), w2 - 3.0, 15.0, boxstyle="round,pad=0.3",
+    # Draw miniature axes for 3 regimes
+    cx = np.linspace(x2 + 2.0, x2 + w2 - 2.0, 50)
+    cy = 43.5 - 6.5 * ((cx - (x2 + 2.0))/(w2 - 4.0))**0.7
+    cy[cx > x2 + 9.5] -= 10.0 * (((cx[cx > x2 + 9.5] - (x2 + 9.5))/(w2 - 11.5))**1.8)
+    
+    # Shaded regime zones
+    ax.axvspan(x2 + 1.8, x2 + 6.2, ymin=0.24, ymax=0.46, color="#DBEAFE", alpha=0.4, zorder=3)
+    ax.axvspan(x2 + 6.2, x2 + 11.0, ymin=0.24, ymax=0.46, color="#FEF3C7", alpha=0.4, zorder=3)
+    ax.axvspan(x2 + 11.0, x2 + w2 - 1.8, ymin=0.24, ymax=0.46, color="#FEE2E2", alpha=0.4, zorder=3)
+
+    ax.plot(cx, cy, color="#1E40AF", lw=2.4, zorder=5)
+
+    # Regime Labels (single line to avoid \n PyMuPDF block collisions)
+    ax.text(x2 + 4.0, 44.5, "Regime I", ha='center', va='bottom', fontsize=7.2, fontweight='bold', color="#0369A1", zorder=6)
+    ax.text(x2 + 8.6, 44.5, "Regime II", ha='center', va='bottom', fontsize=7.2, fontweight='bold', color="#B45309", zorder=6)
+    ax.text(x2 + 13.8, 44.5, "Regime III", ha='center', va='bottom', fontsize=7.2, fontweight='bold', color="#DC2626", zorder=6)
+
+    # Cutoff indicators
+    ax.axvline(x2 + 6.2, ymin=0.24, ymax=0.46, color="#94A3B8", ls=":", lw=1.0, zorder=4)
+    ax.axvline(x2 + 11.0, ymin=0.24, ymax=0.46, color="#94A3B8", ls=":", lw=1.0, zorder=4)
+    ax.text(x2 + 6.2, 23.5, r"$\tau_0 \sim 1/\beta$", ha='center', va='top', fontsize=7.0, color="#64748B", zorder=5)
+    ax.text(x2 + 11.0, 23.5, r"$1/\gamma = 0.05\text{ s}$", ha='center', va='top', fontsize=7.0, color="#64748B", zorder=5)
+
+    # Branching Ratio & Stability Badge Box
+    stab_box = FancyBboxPatch((x2 + 1.2, 8.0), w2 - 2.4, 12.0, boxstyle="round,pad=0.2",
                               facecolor="#ECFDF5", edgecolor="#10B981", linewidth=1.2, zorder=4)
-    ax.add_patch(stat_box)
-    ax.text(x2 + w2/2.0, 20.5, "Branching Ratio & Stability", ha='center', va='center', fontsize=9.2, fontweight='bold', color='#065F46', zorder=5)
-    ax.text(x2 + w2/2.0, 16.0, r"$n^* = \frac{\eta}{\gamma^\alpha + \beta^\alpha} = 0.3043 < 1$",
-            ha='center', va='center', fontsize=9.8, fontweight='bold', color='#047857', zorder=5)
-    ax.text(x2 + w2/2.0, 11.2, r"Strict Subcritical Stationarity", ha='center', va='center', fontsize=8.5, color='#065F46', zorder=5)
+    ax.add_patch(stab_box)
+    ax.text(x2 + w2/2.0, 17.0, "Branching Ratio & Ergodicity", ha='center', va='center', fontsize=8.6, fontweight='bold', color='#065F46', zorder=5)
+    ax.text(x2 + w2/2.0, 13.2, r"$n^* = \frac{\eta}{\gamma^\alpha + \beta^\alpha} = 0.3043 < 1.0$",
+            ha='center', va='center', fontsize=9.2, fontweight='bold', color='#047857', zorder=5)
+    ax.text(x2 + w2/2.0, 9.8, r"Subcritical Ergodic Stability", ha='center', va='center', fontsize=7.8, color='#065F46', zorder=5)
 
-    # ---------------- STAGE 3: SPECTRAL & MARKOVIAN ----------------
-    x3, w3 = 41.5, 17.0
-    spec_box = FancyBboxPatch((x3 + 0.8, 51.0), w3 - 1.6, 26.5, boxstyle="round,pad=0.4",
+    # =========================================================================
+    # STAGE 3: SPECTRAL INVERSION & MARKOVIAN EMBEDDING
+    # =========================================================================
+    x3, w3 = 41.4, 17.2
+    # 3A: Complex Bromwich Contour Diagram
+    spec_box = FancyBboxPatch((x3 + 0.8, 52.5), w3 - 1.6, 25.5, boxstyle="round,pad=0.3",
                              facecolor="#EFF6FF", edgecolor="#3B82F6", linewidth=1.0, zorder=3)
     ax.add_patch(spec_box)
-    ax.text(x3 + w3/2.0, 75.2, "Bromwich Contour Inversion", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1E40AF', zorder=4)
-    # Clean two-line format eliminates multi-story fraction collisions
-    ax.text(x3 + w3/2.0, 70.0, r"$\rho_\alpha(\xi) = \pi^{-1} \beta^\alpha \sin(\pi\alpha)\xi^\alpha$",
-            ha='center', va='center', fontsize=8.6, fontweight='bold', color='#1E3A8A', zorder=4)
-    ax.text(x3 + w3/2.0, 66.8, r"$\times \,[\xi^{2\alpha} + 2\beta^\alpha\xi^\alpha\cos(\pi\alpha) + \beta^{2\alpha}]^{-1}$",
+    ax.text(x3 + w3/2.0, 75.8, "Bromwich Contour Inversion", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E40AF', zorder=4)
+    
+    # Formula cleanly separated into two non-colliding lines
+    ax.text(x3 + w3/2.0, 72.0, r"$\rho_\alpha(\xi) = \pi^{-1} \beta^\alpha \sin(\pi\alpha)\xi^\alpha$",
             ha='center', va='center', fontsize=8.2, fontweight='bold', color='#1E3A8A', zorder=4)
-    sx = np.linspace(x3 + 2.0, x3 + w3 - 2.0, 35)
-    sy = 54.5 + 5.5 * np.exp(-((sx - (x3 + w3/2.0))/2.5)**2)
+    ax.text(x3 + w3/2.0, 66.0, r"$\times \,[\xi^{2\alpha} + 2\beta^\alpha\xi^\alpha\cos(\pi\alpha) + \beta^{2\alpha}]^{-1}$",
+            ha='center', va='center', fontsize=7.8, fontweight='bold', color='#1E3A8A', zorder=4)
+
+    # Visual Spectrum curve with discrete quadrature poles
+    sx = np.linspace(x3 + 2.0, x3 + w3 - 2.0, 40)
+    sy = 58.5 + 4.0 * np.exp(-((sx - (x3 + w3/2.0))/2.6)**2)
     ax.plot(sx, sy, color="#2563EB", lw=2.0, zorder=4)
-    pole_x = np.linspace(x3 + 3.0, x3 + w3 - 3.0, 7)
-    pole_y = 54.5 + 5.5 * np.exp(-((pole_x - (x3 + w3/2.0))/2.5)**2)
+    
+    # Discrete quadrature poles
+    pole_x = np.linspace(x3 + 3.2, x3 + w3 - 3.2, 8)
+    pole_y = 58.5 + 4.0 * np.exp(-((pole_x - (x3 + w3/2.0))/2.6)**2)
     for px_i, py_i in zip(pole_x, pole_y):
-        ax.plot([px_i, px_i], [54.5, py_i], color="#DC2626", ls="--", lw=1.1, zorder=4)
-        ax.plot(px_i, py_i, marker="o", color="#DC2626", ms=3.5, zorder=5)
-    ax.text(x3 + w3/2.0, 52.8, r"Quadrature Poles $\xi_m, \omega_m$ ($M=16$)", ha='center', va='center', fontsize=8.2, color='#1E40AF', zorder=4)
+        ax.plot([px_i, px_i], [58.5, py_i], color="#DC2626", ls="--", lw=1.2, zorder=4)
+        ax.plot(px_i, py_i, marker="o", color="#DC2626", ms=4.0, zorder=5)
+    ax.text(x3 + w3/2.0, 56.0, r"Quadrature Nodes $\xi_m, \omega_m$ ($M=16$)", ha='center', va='center', fontsize=8.0, color='#1E40AF', zorder=4)
 
-    rec_box = FancyBboxPatch((x3 + 0.8, 6.5), w3 - 1.6, 42.0, boxstyle="round,pad=0.4",
-                             facecolor="#FFFFFF", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
-    ax.add_patch(rec_box)
-    ax.text(x3 + w3/2.0, 46.0, r"$\mathcal{O}(NM)$ State-Space Vector", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1E293B', zorder=4)
-    rec_info = [
-        (r"$\bullet$ Continuous Superposition:", "#0F172A"),
-        (r"  $\phi_M(t) = \eta e^{-\gamma t}\sum_{m=1}^M \omega_m e^{-\xi_m t}$", "#2563EB"),
-        (r"$\bullet$ Latent Markovian State:", "#0F172A"),
-        (r"  $A_m(t_i) = A_m(t_{i-1})e^{-(\xi_m+\gamma)\Delta t_i} + 1$", "#059669"),
-        (r"$\bullet$ Exact State-Space Update:", "#0F172A"),
-        (r"  $\mathcal{O}(1)$ per event step per mode", "#475569"),
-        (r"$\bullet$ Likelihood Bottleneck Broken:", "#7C3AED"),
-        (r"  $\mathcal{O}(N^2) \longrightarrow \mathcal{O}(NM)$ (99.8% Speedup)", "#DC2626")
-    ]
-    y_pos = 41.5
-    for text, col in rec_info:
-        ax.text(x3 + 1.8, y_pos, text, ha='left', va='center', fontsize=8.5, color=col, zorder=4)
-        y_pos -= 4.4
+    # 3B: O(NM) State-Space Vector Diagram
+    state_box = FancyBboxPatch((x3 + 0.8, 6.5), w3 - 1.6, 44.0, boxstyle="round,pad=0.3",
+                              facecolor="#FFFFFF", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
+    ax.add_patch(state_box)
+    ax.text(x3 + w3/2.0, 48.2, r"$\mathcal{O}(NM)$ State-Space Lifting", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E293B', zorder=4)
 
-    # ---------------- STAGE 4: LIKELIHOOD INFERENCE ----------------
-    x4, w4 = 61.5, 16.5
-    int_box = FancyBboxPatch((x4 + 0.8, 51.0), w4 - 1.6, 26.5, boxstyle="round,pad=0.4",
+    # State Vector graphical blocks
+    v_y = 43.5
+    for m_idx in range(1, 5):
+        lbl = f"A_{m_idx}(t)" if m_idx < 4 else "A_M(t)"
+        bx = FancyBboxPatch((x3 + 1.8, v_y - 1.2), w3 - 3.6, 2.8, boxstyle="round,pad=0.1",
+                            facecolor="#F8FAFC", edgecolor="#3B82F6", lw=0.9, zorder=4)
+        ax.add_patch(bx)
+        ax.text(x3 + 3.0, v_y + 0.2, f"Mode {m_idx}:", fontsize=7.6, fontweight="bold", color="#1E40AF", va="center", zorder=5)
+        ax.text(x3 + w3 - 2.8, v_y + 0.2, f"${lbl} = {lbl}^{{-}}e^{{-(\\xi_{m_idx}+\\gamma)\\Delta t}} + 1$",
+                fontsize=7.2, color="#0F172A", ha="right", va="center", zorder=5)
+        v_y -= 3.6
+        if m_idx == 3:
+            ax.text(x3 + w3/2.0, v_y + 1.8, "$\\vdots$", ha="center", va="center", fontsize=9.0, color="#64748B", zorder=5)
+            v_y -= 1.6
+
+    # Complexity Speedup Banner Box
+    sp_box = FancyBboxPatch((x3 + 1.2, 8.0), w3 - 2.4, 12.0, boxstyle="round,pad=0.2",
+                            facecolor="#FEF2F2", edgecolor="#DC2626", linewidth=1.2, zorder=4)
+    ax.add_patch(sp_box)
+    ax.text(x3 + w3/2.0, 17.0, "Complexity Bottleneck Broken", ha='center', va='center', fontsize=8.6, fontweight='bold', color='#B91C1C', zorder=5)
+    ax.text(x3 + w3/2.0, 13.2, r"$\mathcal{O}(N^2) \longrightarrow \mathcal{O}(NM)$ (Lifting)",
+            ha='center', va='center', fontsize=9.2, fontweight='bold', color='#DC2626', zorder=5)
+    ax.text(x3 + w3/2.0, 9.8, r"99.8% Speedup ($\mathcal{O}(1)$ update/event)", ha='center', va='center', fontsize=7.8, color='#7F1D1D', zorder=5)
+
+    # =========================================================================
+    # STAGE 4: RECURSIVE LIKELIHOOD INFERENCE ENGINE
+    # =========================================================================
+    x4, w4 = 61.4, 16.8
+    # 4A: Conditional Intensity Filter Plot
+    int_box = FancyBboxPatch((x4 + 0.8, 52.5), w4 - 1.6, 25.5, boxstyle="round,pad=0.3",
                             facecolor="#ECFDF5", edgecolor="#10B981", linewidth=1.0, zorder=3)
     ax.add_patch(int_box)
-    ax.text(x4 + w4/2.0, 75.2, "Conditional Intensity Filter", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#065F46', zorder=4)
-    ax.text(x4 + w4/2.0, 69.5, r"$\lambda(t) = \mu + \sum_{m=1}^M \omega_m A_m(t)$",
-            ha='center', va='center', fontsize=9.8, fontweight='bold', color='#047857', zorder=4)
-    ax.text(x4 + w4/2.0, 64.0, "Cumulative Compensator:", ha='center', va='center', fontsize=8.5, fontweight='bold', color='#065F46', zorder=4)
-    ax.text(x4 + w4/2.0, 59.2, r"$\Lambda(T) = \mu T + \sum_{m=1}^M \frac{\omega_m}{\xi_m+\gamma} \sum_{i=1}^N (1 - e^{-(\xi_m+\gamma)(T-t_i)})$",
-            ha='center', va='center', fontsize=7.6, color='#065F46', zorder=4)
-    ax.text(x4 + w4/2.0, 53.2, r"Analytical Recursive Evaluation", ha='center', va='center', fontsize=8.8, fontweight='bold', color='#059669', zorder=4)
+    ax.text(x4 + w4/2.0, 75.8, "Conditional Intensity Filter", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#065F46', zorder=4)
+    ax.text(x4 + w4/2.0, 71.4, r"$\lambda(t) = \mu + \sum_{m=1}^M \omega_m A_m(t)$",
+            ha='center', va='center', fontsize=9.2, fontweight='bold', color='#047857', zorder=4)
 
-    mle_box = FancyBboxPatch((x4 + 0.8, 6.5), w4 - 1.6, 42.0, boxstyle="round,pad=0.4",
+    # Dynamic Intensity plot with spikes & baseline
+    ix = np.linspace(x4 + 1.8, x4 + w4 - 1.8, 40)
+    iy = np.full_like(ix, 58.0)
+    for sp_pos, sp_h in [(x4 + 4.5, 9.0), (x4 + 8.5, 11.5), (x4 + 13.0, 8.5)]:
+        dist = ix - sp_pos
+        decay = np.where(dist >= 0, sp_h * np.exp(-dist * 1.6), 0)
+        iy += decay
+    
+    # Baseline mu line
+    ax.plot([x4 + 1.8, x4 + w4 - 1.8], [58.0, 58.0], color="#64748B", ls=":", lw=1.2, zorder=4)
+    ax.text(x4 + 2.4, 59.2, r"$\mu$", fontsize=7.8, fontweight="bold", color="#64748B", zorder=5)
+
+    # Intensity curve
+    ax.plot(ix, iy, color="#059669", lw=2.2, zorder=5)
+    ax.fill_between(ix, 58.0, iy, color="#A7F3D0", alpha=0.45, zorder=3)
+    ax.text(x4 + w4/2.0, 54.8, r"Compensator Area $\Lambda(T)$ (Integrated Path)", ha='center', va='center', fontsize=7.8, color='#065F46', zorder=4)
+
+    # 4B: MLE Optimization & Parameter Vector Box
+    mle_box = FancyBboxPatch((x4 + 0.8, 6.5), w4 - 1.6, 44.0, boxstyle="round,pad=0.3",
                              facecolor="#FFFFFF", edgecolor="#CBD5E1", linewidth=1.0, zorder=3)
     ax.add_patch(mle_box)
-    ax.text(x4 + w4/2.0, 46.0, "MLE Optimization Engine", ha='center', va='center', fontsize=10.5, fontweight='bold', color='#1E293B', zorder=4)
-    mle_info = [
-        (r"$\bullet$ Log-Likelihood Objective:", "#0F172A"),
-        (r"  $\ln\mathcal{L}(\mathbf{\theta}) = \sum_{i=1}^N \ln\lambda(t_i) - \Lambda(T)$", "#059669"),
-        (r"$\bullet$ Algorithm: L-BFGS-B Multi-Start", "#0F172A"),
-        (r"$\bullet$ Calibrated Vector $\hat{\mathbf{\theta}}$ (Real Trades):", "#1E40AF"),
-        (r"  $\hat{\mu} = 2.7224\text{ s}^{-1}, \hat{\alpha} = 0.7429$", "#0F172A"),
-        (r"  $\hat{\beta} = 50.00\text{ s}^{-1}, \hat{\gamma} = 20.00\text{ s}^{-1}$", "#0F172A"),
-        (r"  $\hat{\eta} = 8.3814$", "#0F172A"),
-        (r"$\bullet$ Likelihood Gain vs EHP:", "#B45309"),
-        (r"  $\Delta\text{AIC} = +904.57\ (p < 10^{-100})$", "#DC2626")
-    ]
-    y_pos = 41.5
-    for text, col in mle_info:
-        ax.text(x4 + 1.8, y_pos, text, ha='left', va='center', fontsize=8.4, color=col, zorder=4)
-        y_pos -= 4.0
+    ax.text(x4 + w4/2.0, 48.2, "L-BFGS-B Multi-Start MLE", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E293B', zorder=4)
 
-    # ---------------- STAGE 5: DOWNSTREAM ANALYTICS ----------------
-    x5, w5 = 81.0, 16.5
+    # Objective
+    ax.text(x4 + w4/2.0, 44.2, r"$\ln\mathcal{L}(\boldsymbol{\theta}) = \sum_{i=1}^N \ln\lambda(t_i) - \Lambda(T)$",
+            ha='center', va='center', fontsize=8.5, fontweight='bold', color='#047857', zorder=5)
+
+    # Fitted parameters table display
+    p_params = [
+        (r"$\hat{\mu} = 2.7224\text{ s}^{-1}$", "Baseline Arrival Rate"),
+        (r"$\hat{\alpha} = 0.7429$", "Fractional Singularity"),
+        (r"$\hat{\beta} = 50.00\text{ s}^{-1}$", "Microscopic Cutoff"),
+        (r"$\hat{\gamma} = 20.00\text{ s}^{-1}$", "Tempering Rate"),
+        (r"$\hat{\eta} = 8.3814$", "Excitation Scale")
+    ]
+    py_t = 39.5
+    for p_sym, p_desc in p_params:
+        ax.text(x4 + 2.2, py_t, p_sym, fontsize=8.0, fontweight="bold", color="#1E40AF", va="center", zorder=5)
+        ax.text(x4 + w4 - 2.2, py_t, p_desc, fontsize=7.4, color="#64748B", ha="right", va="center", zorder=5)
+        py_t -= 3.3
+
+    # Likelihood Gain Badge Box
+    aic_box = FancyBboxPatch((x4 + 1.2, 8.0), w4 - 2.4, 12.0, boxstyle="round,pad=0.2",
+                             facecolor="#FEF2F2", edgecolor="#D97706", linewidth=1.2, zorder=4)
+    ax.add_patch(aic_box)
+    ax.text(x4 + w4/2.0, 17.0, "Decisive Information Gain", ha='center', va='center', fontsize=8.6, fontweight='bold', color='#92400E', zorder=5)
+    ax.text(x4 + w4/2.0, 13.2, r"$\Delta\text{AIC} = +904.56$ (vs EHP)",
+            ha='center', va='center', fontsize=9.2, fontweight='bold', color='#B45309', zorder=5)
+    ax.text(x4 + w4/2.0, 9.8, r"Likelihood Ratio: $p < 10^{-100}$", ha='center', va='center', fontsize=7.8, color='#78350F', zorder=5)
+
+    # =========================================================================
+    # STAGE 5: DOWNSTREAM MICROSTRUCTURE & RISK ANALYTICS
+    # =========================================================================
+    x5, w5 = 81.0, 16.8
     sub_modules = [
-        {"y": 60.5, "h": 17.5, "bg": "#F5F3FF", "border": "#8B5CF6", "badge": "5A: Multi-Horizon Forecasting", "b_col": "#7C3AED",
-         "lines": [
-             (r"$\mathbb{E}[N(t, t+\Delta t) \mid \mathcal{H}_t] = \Lambda_\infty \Delta t + \mathbf{C}^\top e^{\mathbf{M}\Delta t}\mathbf{A}(t)$", "#5B21B6", 8.0),
-             (r"$\Delta t \in [5\text{s}, 600\text{s}]$: Captures renewal drift", "#4C1D95", 8.0)
-         ]},
-        {"y": 42.5, "h": 16.5, "bg": "#F0FDFA", "border": "#14B8A6", "badge": "5B: Bivariate Order Flow", "b_col": "#0D9488",
-         "lines": [
-             (r"Branching Matrix $\mathbf{\Gamma} \in \mathbb{R}^{2\times 2}$ (Buy/Sell)", "#115E59", 8.2),
-             (r"Self-Excitation 30.3× Stronger than Cross", "#0F766E", 8.2),
-             (r"$\rho(\mathbf{\Gamma}) = 0.3330 < 1\ (\mathcal{R}_{\text{cross}} = 0.0330)$", "#042F2E", 8.2)
-         ]},
-        {"y": 24.5, "h": 16.5, "bg": "#FEF2F2", "border": "#EF4444", "badge": "5C: Basel FRTB Risk Control", "b_col": "#DC2626",
-         "lines": [
-             (r"Dynamic $\text{VaR}_{0.99}(t)$ & Coherent $\text{ES}_{0.99}(t)$", "#991B1B", 8.2),
-             (r"POT Generalized Pareto Tail Fit", "#7F1D1D", 8.2),
-             (r"Kupiec $p=0.106$, Christoffersen $p=0.565$", "#16A34A", 8.2)
-         ]},
-        {"y": 6.5, "h": 16.5, "bg": "#FFFBEB", "border": "#F59E0B", "badge": "5D: Market Reflexivity", "b_col": "#D97706",
-         "lines": [
-             (r"Multiplier: $\mathcal{R}_{\text{refl}} = (1-n^*)^{-2} = 2.0661$", "#92400E", 8.2),
-             (r"+106.6% Endogenous Volatility Feedback", "#78350F", 8.2),
-             (r"DFA Long Memory: $\hat{H} = 0.8299 \pm 0.007$", "#B45309", 8.2)
-         ]}
+        {"y": 62.0, "h": 16.5, "bg": "#F5F3FF", "border": "#8B5CF6", "badge": "5A: Multi-Horizon Forecasting", "b_col": "#7C3AED",
+         "desc": r"$\mathbb{E}[N(t, t+\Delta t) \mid \mathcal{H}_t] = \bar{\lambda}\Delta t + \mathbf{C}^\top e^{\mathbf{M}\Delta t}\mathbf{A}(t)$",
+         "sub": r"$\Delta t \in [5\text{s}, 600\text{s}]$: Captures Ergodic Drift"},
+        {"y": 43.5, "h": 16.5, "bg": "#F0FDFA", "border": "#14B8A6", "badge": "5B: Bivariate Buy/Sell LOB", "b_col": "#0D9488",
+         "desc": r"Self-Excitation $\eta_{\text{self}} = 0.7110$ ($30.3\times$ stronger)",
+         "sub": r"Cross-Excitation $\eta_{\text{cross}} = 0.0235$ | $\rho(\mathbf{\Gamma}) < 1$"},
+        {"y": 25.0, "h": 16.5, "bg": "#FEF2F2", "border": "#EF4444", "badge": "5C: Basel FRTB Risk Control", "b_col": "#DC2626",
+         "desc": r"Dynamic $\text{VaR}_{0.99}(t)$ & Coherent $\text{ES}_{0.99}(t)$",
+         "sub": r"Kupiec $p=0.106$ [PASS] | Acerbi-Székely $p=0.082$"},
+        {"y": 6.5, "h": 16.5, "bg": "#FFFBEB", "border": "#F59E0B", "badge": "5D: Macroscopic Reflexivity", "b_col": "#D97706",
+         "desc": r"Multiplier: $\mathcal{R}_{\text{refl}} = (1-n^*)^{-2} = 2.0661$",
+         "sub": r"+106.6% Variance Amplification | DFA $H = 0.8299$"}
     ]
 
     for sm in sub_modules:
         sm_box = FancyBboxPatch((x5 + 0.8, sm["y"]), w5 - 1.6, sm["h"], boxstyle="round,pad=0.3,rounding_size=0.6",
                                 facecolor=sm["bg"], edgecolor=sm["border"], linewidth=1.2, zorder=3)
         ax.add_patch(sm_box)
-        b_patch = FancyBboxPatch((x5 + 1.5, sm["y"] + sm["h"] - 3.8), w5 - 3.0, 3.2, boxstyle="round,pad=0.2",
+        
+        # Header Badge
+        b_patch = FancyBboxPatch((x5 + 1.5, sm["y"] + sm["h"] - 3.8), w5 - 3.0, 3.0, boxstyle="round,pad=0.2",
                                  facecolor=sm["b_col"], edgecolor="none", zorder=4)
         ax.add_patch(b_patch)
-        ax.text(x5 + w5/2.0, sm["y"] + sm["h"] - 2.2, sm["badge"], ha='center', va='center', fontsize=8.5, fontweight='bold', color="#FFFFFF", zorder=5)
+        ax.text(x5 + w5/2.0, sm["y"] + sm["h"] - 2.3, sm["badge"], ha='center', va='center', fontsize=8.2, fontweight='bold', color="#FFFFFF", zorder=5)
 
-        y_sub = sm["y"] + sm["h"] - 6.4
-        for l_text, l_col, l_sz in sm["lines"]:
-            ax.text(x5 + w5/2.0, y_sub, l_text, ha='center', va='center', fontsize=l_sz, fontweight='bold' if 'rho' in l_text or 'Multiplier' in l_text else 'normal', color=l_col, zorder=4)
-            y_sub -= 3.8
+        # Content text
+        ax.text(x5 + w5/2.0, sm["y"] + sm["h"] - 6.8, sm["desc"], ha='center', va='center', fontsize=7.8, fontweight='bold', color="#1E293B", zorder=4)
+        ax.text(x5 + w5/2.0, sm["y"] + sm["h"] - 11.0, sm["sub"], ha='center', va='center', fontsize=7.4, color="#475569", zorder=4)
 
-    # Connecting arrows
+    # =========================================================================
+    # INTER-STAGE CONNECTING ARROWS
+    # =========================================================================
     arrow_links = [
-        (2.5 + 16.5, 22.0, 48.8, "Trade\nArrivals"),
-        (22.0 + 16.5, 41.5, 48.8, "Spectral\nDensity"),
-        (41.5 + 17.0, 61.5, 48.8, "State\nVectors"),
-        (61.5 + 16.5, 81.0, 48.8, "Calibrated\nParameters")
+        (2.2 + 16.8, 21.8, 51.5, "Tick Data"),
+        (21.8 + 16.8, 41.4, 51.5, "Kernel $\\phi(t)$"),
+        (41.4 + 17.2, 61.4, 51.5, "State $\\mathbf{A}(t)$"),
+        (61.4 + 16.8, 81.0, 51.5, "Fitted $\\hat{\\boldsymbol{\\theta}}$")
     ]
     for x_start, x_end, y_arr, arr_lbl in arrow_links:
         arrow = FancyArrowPatch((x_start, y_arr), (x_end, y_arr),
                                 arrowstyle="simple,head_width=5.5,head_length=6.0,tail_width=2.0",
                                 facecolor="#0F172A", edgecolor="#000000", lw=0.8, zorder=6)
         ax.add_patch(arrow)
-        arr_box = FancyBboxPatch(((x_start + x_end)/2.0 - 2.2, y_arr + 1.2), 4.4, 4.2, boxstyle="round,pad=0.1",
+        arr_box = FancyBboxPatch(((x_start + x_end)/2.0 - 2.2, y_arr - 1.8), 4.4, 3.6, boxstyle="round,pad=0.1",
                                  facecolor="#F8FAFC", edgecolor="#94A3B8", linewidth=0.8, zorder=7)
         ax.add_patch(arr_box)
-        lines_arr = arr_lbl.split('\n')
-        ax.text((x_start + x_end)/2.0, y_arr + 3.9, lines_arr[0], ha='center', va='center', fontsize=7.4, fontweight='bold', color='#1E293B', zorder=8)
-        ax.text((x_start + x_end)/2.0, y_arr + 2.1, lines_arr[1], ha='center', va='center', fontsize=7.4, fontweight='bold', color='#1E293B', zorder=8)
+        ax.text((x_start + x_end)/2.0, y_arr, arr_lbl, ha='center', va='center', fontsize=7.2, fontweight='bold', color='#1E293B', zorder=8)
 
     fig1_path = "figures/fig1_system_architecture.pdf"
     plt.savefig(fig1_path, bbox_inches="tight", pad_inches=0.35)
