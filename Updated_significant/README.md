@@ -41,21 +41,21 @@ In response to the editorial evaluation noting that the previous submission lack
 
 ```
 Updated_significant/
-├── manuscript.pdf                       # 25-page complete publication manuscript (compiled, 0 errors)
-├── manuscript.tex                       # Complete LaTeX source file
+├── manuscript.pdf                       # 27-page complete publication manuscript (compiled, 0 errors)
+├── manuscript.tex                       # Complete LaTeX source file (8 master publication figures)
 ├── cover_letter.pdf                     # 2-page detailed point-by-point response to editors
 ├── cover_letter.tex                     # Response letter LaTeX source
 ├── README.md                            # Comprehensive package documentation (this file)
 │
-├── figures/                             # Publication-quality vector PDF figures
-│   ├── fig1_kernel_mechanics.pdf        # Fig 1: Kernel relaxation across 3 regimes & spectral density
-│   ├── fig2_resolvent_and_signature_plot.pdf # Fig 2: Resolvent operator closure & signature plot
-│   ├── multi_horizon_forecasting_crossover.pdf # Fig 3: Multi-horizon RMSE & Renewal ergodic convergence
-│   ├── intensity_comparison.pdf         # Fig 4: Event-by-event intensity tracking dynamics
-│   ├── qq_plot_comparison.pdf           # Fig 5(a): Time-change theorem uniform QQ residuals
-│   ├── residuals_acf.pdf                # Fig 5(b): Compensator residual autocorrelation (Bartlett bands)
-│   ├── fig6_frtb_var_expected_shortfall.pdf # Fig 6: Regulatory tail risk (Dynamic VaR / FRTB ES)
-│   └── fig7_bivariate_order_flow.pdf    # Fig 7: Bivariate buy/sell cross-excitation network
+├── figures/                             # Master 8-Figure Publication Suite (Strictly 0 collisions & 0 overflows)
+│   ├── fig1_system_architecture.pdf     # Fig 1: End-to-End 5-Stage System Architecture & Computational Pipeline (B&W boxes, color interior)
+│   ├── fig2_kernel_mechanics.pdf        # Fig 2: Multi-Scale Kernel Relaxation Across 7 Decades & Bromwich-Stieltjes Spectral Density
+│   ├── fig3_branching_and_reflexivity.pdf # Fig 3: Branching Cluster Trees (Poisson vs Exp vs ML-TFHP) & LOB Reflexivity Feedback Loop
+│   ├── fig4_resolvent_and_signature_plot.pdf # Fig 4: Wiener-Hopf Resolvent Operator Closure & Realized Volatility Signature Plot
+│   ├── fig5_dfa_memory_scaling.pdf      # Fig 5: Exhaustive 4-Panel Microstructure Memory Suite (DFA, Trade-Sign ACF, CCDF, Fano factor)
+│   ├── fig6_qq_residual_diagnostics.pdf # Fig 6: Papangelou Compensator Residual QQ Plot & 35-Lag ACF (Bartlett 95% bands)
+│   ├── fig7_frtb_var_expected_shortfall.pdf # Fig 7: Basel FRTB High-Frequency Dynamic VaR & Coherent Expected Shortfall Backtest
+│   └── fig8_bivariate_order_flow.pdf    # Fig 8: Bivariate Buy/Sell Directional Memory Kernels & 2x2 LOB Branching Matrix Heatmap
 │
 ├── tables/                              # Modular standalone LaTeX tables
 │   ├── table1_literature_comparison.tex # Theoretical feature matrix across literature
@@ -70,7 +70,7 @@ Updated_significant/
 │
 ├── scripts/                             # Complete Python verification & plotting code
 │   ├── generate_all_updated_results.py  # End-to-end benchmark suite & LaTeX table generator
-│   ├── generate_all_publication_figures.py # Matplotlib publication figure generator
+│   ├── generate_all_publication_figures.py # Matplotlib publication figure generator (Master 8-figure suite)
 │   └── verify_all_empirical_results.py  # Mathematical assertion test suite
 │
 └── data/                                # Empirical dataset
