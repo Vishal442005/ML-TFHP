@@ -43,6 +43,11 @@ submission_tex/
 wiley_submission/
 elsevier_submission/
 elseiver_submission/
+figures/
+figures_png/
+Updated_significant/figures/
+Updated_significant/figures_png/
+*.png
 *.tex
 *.pdf
 *.aux
@@ -57,9 +62,14 @@ literature/*.txt
 reviewer2_dossier*.txt
 scripts/test_*.py
 scripts/apply_manuscript_updates.py
+scripts/apply_8_figure_manuscript_updates.py
 scripts/extract_paper_*.py
 scripts/add_fig_refs.py
 scripts/fix_caption.py
+scripts/fix_tex.py
+scripts/check_*.py
+scripts/verify_*.py
+scripts/generate_architecture_diagram.py
 paper.*
 manuscript.*
 submission_tables.*
