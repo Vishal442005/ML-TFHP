@@ -1190,9 +1190,9 @@ ax2.set_xlabel("Loss Magnitude (%)", fontsize=15.5, fontweight="bold", labelpad=
 ax2.set_ylabel("Tail Probability Density", fontsize=15.5, fontweight="bold", labelpad=12)
 ax2.set_title("(b) Tail Risk Distribution & Basel FRTB Scorecard", fontsize=16.0, fontweight="bold", pad=18)
 ax2.grid(True, ls="--", alpha=0.35)
-ax2.yaxis.set_major_locator(plt.MaxNLocator(nbins=6, prune='lower'))
 ax2.tick_params(axis='both', which='major', labelsize=13)
-ax2.set_xlim([0, max(np.max(losses)*1.1, 0.05)])
+ax2.set_xlim([0, max(np.max(losses)*1.1, 0.055)])
+ax2.set_xticks([0.01, 0.02, 0.03, 0.04, 0.05])
 ax2.legend(loc="upper left", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=11.0, labelspacing=0.7)
 
 fig7_path = "figures/fig7_frtb_var_expected_shortfall.pdf"
