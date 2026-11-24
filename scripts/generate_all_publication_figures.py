@@ -193,12 +193,15 @@ def generate_figure_1():
     ax.text(x1 + w1/2.0, 48.2, "L3 Limit Order Book Ladder", ha='center', va='center', fontsize=10.0, fontweight='bold', color='#1E293B', zorder=4)
 
     # Draw Bid / Ask Depth Bars
+    # Ask Side (Red)
     asks = [(78036, 4.2), (78034, 3.1), (78032, 1.8)]
+    # Bid Side (Green)
     bids = [(78030, 2.0), (78028, 3.5), (78026, 4.8)]
 
     # Draw Ladder
     y_lob = 44.0
     for p, v in asks:
+        # Ask bar right
         ax.barh(y_lob, v, left=x1 + w1/2.0 + 0.2, height=2.2, color="#FCA5A5", edgecolor="#DC2626", lw=1.0, zorder=4)
         ax.text(x1 + w1/2.0 - 0.4, y_lob, f"${p}", ha="right", va="center", fontsize=7.8, fontweight="bold", color="#DC2626", zorder=5)
         ax.text(x1 + w1/2.0 + v + 0.6, y_lob, f"{v:.1f}", ha="left", va="center", fontsize=7.2, color="#991B1B", zorder=5)
@@ -211,6 +214,7 @@ def generate_figure_1():
     y_lob -= 2.6
 
     for p, v in bids:
+        # Bid bar left
         ax.barh(y_lob, v, left=x1 + w1/2.0 - 0.2 - v, height=2.2, color="#86EFAC", edgecolor="#16A34A", lw=1.0, zorder=4)
         ax.text(x1 + w1/2.0 + 0.4, y_lob, f"${p}", ha="left", va="center", fontsize=7.8, fontweight="bold", color="#16A34A", zorder=5)
         ax.text(x1 + w1/2.0 - v - 0.6, y_lob, f"{v:.1f}", ha="right", va="center", fontsize=7.2, color="#166534", zorder=5)
@@ -248,6 +252,7 @@ def generate_figure_1():
 
     # Draw miniature axes for 3 regimes
     cx = np.linspace(x2 + 2.0, x2 + w2 - 2.0, 50)
+    # Log-log style curve
     cy = 43.5 - 6.5 * ((cx - (x2 + 2.0))/(w2 - 4.0))**0.7
     cy[cx > x2 + 9.5] -= 10.0 * (((cx[cx > x2 + 9.5] - (x2 + 9.5))/(w2 - 11.5))**1.8)
     
@@ -352,6 +357,7 @@ def generate_figure_1():
     # Dynamic Intensity plot with spikes & baseline
     ix = np.linspace(x4 + 1.8, x4 + w4 - 1.8, 40)
     iy = np.full_like(ix, 58.0)
+    # Add spikes
     for sp_pos, sp_h in [(x4 + 4.5, 9.0), (x4 + 8.5, 11.5), (x4 + 13.0, 8.5)]:
         dist = ix - sp_pos
         decay = np.where(dist >= 0, sp_h * np.exp(-dist * 1.6), 0)
@@ -392,7 +398,7 @@ def generate_figure_1():
 
     # Likelihood Gain Badge Box
     aic_box = FancyBboxPatch((x4 + 1.2, 8.0), w4 - 2.4, 12.0, boxstyle="round,pad=0.2",
-                             facecolor="#FEF2F2", edgecolor="#D97706", linewidth=1.2, zorder=4)
+                             facecolor="#FEF3C7", edgecolor="#D97706", linewidth=1.2, zorder=4)
     ax.add_patch(aic_box)
     ax.text(x4 + w4/2.0, 17.0, "Decisive Information Gain", ha='center', va='center', fontsize=8.6, fontweight='bold', color='#92400E', zorder=5)
     ax.text(x4 + w4/2.0, 13.2, r"$\Delta\text{AIC} = +904.56$ (vs EHP)",
@@ -452,11 +458,14 @@ def generate_figure_1():
         ax.add_patch(arr_box)
         ax.text((x_start + x_end)/2.0, y_arr, arr_lbl, ha='center', va='center', fontsize=7.2, fontweight='bold', color='#1E293B', zorder=8)
 
-    fig1_path = "figures/fig1_system_architecture.pdf"
-    plt.savefig(fig1_path, bbox_inches="tight", pad_inches=0.35)
-    copy_to_all_destinations(fig1_path, "fig1_system_architecture.pdf")
+    out_pdf = "figures/fig1_system_architecture.pdf"
+    plt.savefig(out_pdf, bbox_inches="tight", pad_inches=0.35)
     plt.close()
-    print(f"Saved: {fig1_path}")
+    print(f"Generated {out_pdf} successfully!")
+
+    fig1_path = "figures/fig1_system_architecture.pdf"
+    copy_to_all_destinations(fig1_path, "fig1_system_architecture.pdf")
+    print(f"Saved and synced: {fig1_path}")
 
 generate_figure_1()
 
@@ -535,7 +544,7 @@ print(f"Saved: {fig2_path}")
 # =============================================================================
 print("\n--- Generating Figure 3: Branching Trees & LOB Reflexivity Feedback ---")
 def generate_figure_3():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18.5, 8.8), dpi=300)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(18.8, 9.4), dpi=300)
     fig.patch.set_facecolor('white')
     ax1.set_facecolor('white')
     ax2.set_facecolor('white')
@@ -554,167 +563,216 @@ def generate_figure_3():
             ec="#000000", fc="#FFFFFF", lw=2.2, zorder=2
         )
         ax.add_patch(box)
-        ax.plot([x + 0.8, x + w - 0.8], [y + h - 4.5, y + h - 4.5], color="#E2E8F0", lw=1.5, zorder=3)
+        ax.plot([x + 0.8, x + w - 0.8], [y + h - 5.0, y + h - 5.0], color="#CBD5E1", lw=1.5, zorder=3)
         if title:
-            ax.text(x + 2.0, y + h - 2.8, title, fontsize=12.5, fontweight='bold', color="#0F172A", zorder=4, va="center")
+            ax.text(x + 2.5, y + h - 3.0, title, fontsize=10.5, fontweight='bold', color="#0F172A", zorder=4, va="center")
         if badge_text:
             badge = FancyBboxPatch(
-                (x + w - 10.5, y + h - 3.8), 9.0, 2.2,
-                boxstyle="round,pad=0.2,rounding_size=0.6",
-                ec="none", fc=badge_color, alpha=0.15, zorder=3
+                (x + w - 17.5, y + h - 4.2), 15.5, 2.6,
+                boxstyle="round,pad=0.2,rounding_size=0.5",
+                ec="none", fc=badge_color, zorder=3
             )
             ax.add_patch(badge)
-            ax.text(x + w - 6.0, y + h - 2.8, badge_text, fontsize=9.5, fontweight='bold',
-                    color=badge_color, ha="center", va="center", zorder=4)
+            ax.text(x + w - 9.75, y + h - 2.9, badge_text, fontsize=8.8, fontweight='bold',
+                    color="#FFFFFF", ha="center", va="center", zorder=4)
 
-    # Panel A: Branching Trees
+    # =========================================================================
+    # PANEL A: BRANCHING CLUSTER TREES ACROSS SPECIFICATIONS
+    # =========================================================================
     draw_panel_box(ax1, 2.0, 2.0, 96.0, 96.0,
-                   title="(a) BRANCHING CLUSTER TREES ACROSS SPECIFICATIONS",
-                   badge_text="CLUSTER DYNAMICS", badge_color="#7C3AED")
+                   title="(a) Branching Cluster Trees Across Specifications",
+                   badge_text="CLUSTER MECHANICS", badge_color="#7C3AED")
 
-    b1 = FancyBboxPatch((5.0, 75.0), 90.0, 15.0, boxstyle="round,pad=0.3,rounding_size=0.8",
+    # Tier 1: Homogeneous Poisson
+    b1 = FancyBboxPatch((5.0, 75.0), 90.0, 16.0, boxstyle="round,pad=0.3,rounding_size=0.8",
                         ec="#0F172A", fc="#FFFFFF", lw=1.6, zorder=3)
     ax1.add_patch(b1)
-    ax1.text(7.5, 86.5, "1. Homogeneous Poisson Null", fontsize=11, fontweight='bold', color="#0F172A")
-    ax1.text(48.0, 86.5, r"Branching Ratio $n^* \equiv 0$ | No Offspring Cascades", fontsize=10, color="#64748B")
+    ax1.text(7.5, 87.5, "1. Homogeneous Poisson Null Model", fontsize=10.5, fontweight='bold', color="#0F172A")
+    ax1.text(54.0, 87.5, r"Branching Ratio $n^* \equiv 0$ (Memoryless Null)", fontsize=9.0, color="#64748B")
     poi_times = [15.0, 32.0, 52.0, 72.0, 88.0]
-    ax1.plot([10.0, 92.0], [79.0, 79.0], color="#94A3B8", lw=1.5, zorder=4)
+    ax1.plot([10.0, 92.0], [79.5, 79.5], color="#94A3B8", lw=1.5, zorder=4)
     for pt in poi_times:
-        ax1.scatter(pt, 79.0, s=90, color="#0284C7", zorder=5, edgecolor="#0F172A", lw=1.2)
-        ax1.text(pt, 81.5, r"$\mu$", fontsize=9.5, fontweight='bold', color="#0284C7", ha="center")
-    ax1.text(93.0, 79.0, "Time $t$", fontsize=9.5, color="#64748B", va="center")
+        ax1.scatter(pt, 79.5, s=90, color="#0284C7", zorder=5, edgecolor="#0F172A", lw=1.2)
+        ax1.text(pt, 82.0, r"$\mu$", fontsize=9.2, fontweight='bold', color="#0284C7", ha="center")
+    ax1.text(93.0, 79.5, "Time $t$", fontsize=8.8, color="#64748B", va="center")
 
-    b2 = FancyBboxPatch((5.0, 52.0), 90.0, 20.0, boxstyle="round,pad=0.3,rounding_size=0.8",
+    # Tier 2: Exponential Hawkes
+    b2 = FancyBboxPatch((5.0, 51.0), 90.0, 21.5, boxstyle="round,pad=0.3,rounding_size=0.8",
                         ec="#0F172A", fc="#FFFFFF", lw=1.6, zorder=3)
     ax1.add_patch(b2)
-    ax1.text(7.5, 68.5, "2. Exponential Hawkes (Single Scale)", fontsize=11, fontweight='bold', color="#0F172A")
-    ax1.text(50.0, 68.5, r"$\phi(t) \sim e^{-\beta t}$ | Rapid Memory Loss & Shallow Trees", fontsize=10, color="#DC2626")
+    ax1.text(7.5, 69.2, "2. Exponential Hawkes Model", fontsize=10.5, fontweight='bold', color="#0F172A")
+    ax1.text(52.0, 69.2, r"$\phi(t) \sim e^{-\beta t}$ (Rapid Extinction $\tau \sim 0.02\text{ s}$)", fontsize=9.0, color="#DC2626")
     ax1.plot([10.0, 92.0], [56.0, 56.0], color="#94A3B8", lw=1.5, zorder=4)
     ax1.scatter(20.0, 56.0, s=110, color="#0284C7", zorder=5, edgecolor="#0F172A", lw=1.2)
-    ax1.text(20.0, 58.5, "Immigrant", fontsize=9, fontweight='bold', color="#0284C7", ha="center")
+    ax1.text(20.0, 59.0, "Immigrant", fontsize=8.5, fontweight='bold', color="#0284C7", ha="center")
     ax1.scatter(28.0, 61.5, s=80, color="#EA580C", zorder=5, edgecolor="#0F172A", lw=1.2)
     ax1.plot([20.0, 28.0], [56.0, 61.5], color="#EA580C", lw=1.6, ls="--", zorder=4)
-    ax1.text(28.0, 63.8, "Gen 1", fontsize=8.5, color="#EA580C", ha="center")
-    ax1.scatter(34.0, 61.5, s=80, color="#EA580C", zorder=5, edgecolor="#0F172A", lw=1.2)
-    ax1.plot([20.0, 34.0], [56.0, 61.5], color="#EA580C", lw=1.6, ls="--", zorder=4)
-    ax1.text(55.0, 60.0, r"$\longrightarrow$ Rapid Extinction ($\tau \sim 1/\beta = 0.02\text{ s}$): Misses Mesoscopic Persistence",
-             fontsize=9.5, fontweight='bold', color="#B91C1C")
+    ax1.text(28.0, 64.0, "Gen 1", fontsize=8.0, color="#EA580C", ha="center")
+    ax1.scatter(35.0, 61.5, s=80, color="#EA580C", zorder=5, edgecolor="#0F172A", lw=1.2)
+    ax1.plot([20.0, 35.0], [56.0, 61.5], color="#EA580C", lw=1.6, ls="--", zorder=4)
+    ax1.text(55.0, 59.5, r"$\longrightarrow$ Rapid Extinction: Misses Mesoscopic Memory",
+             fontsize=8.8, fontweight='bold', color="#B91C1C")
 
-    b3 = FancyBboxPatch((5.0, 6.0), 90.0, 43.0, boxstyle="round,pad=0.3,rounding_size=0.8",
+    # Tier 3: ML-TFHP Multi-Scale Process
+    b3 = FancyBboxPatch((5.0, 5.0), 90.0, 43.0, boxstyle="round,pad=0.3,rounding_size=0.8",
                         ec="#0F172A", fc="#FFFFFF", lw=1.8, zorder=3)
     ax1.add_patch(b3)
-    ax1.text(7.5, 45.0, "3. ML-TFHP Multi-Scale Tempered Fractional Process (Ours)", fontsize=11.5, fontweight='bold', color="#059669")
-    ax1.text(65.0, 45.0, r"Three Relaxation Regimes ($t^{\alpha-1} \to t^{-(1+\alpha)} \to e^{-\gamma t}$)", fontsize=10, fontweight='bold', color="#047857")
+    ax1.text(7.5, 44.8, "3. ML-TFHP Multi-Scale Process", fontsize=10.5, fontweight='bold', color="#059669")
+    ax1.text(52.0, 44.8, r"3 Regimes: $t^{\alpha-1} \longrightarrow t^{-(1+\alpha)} \longrightarrow e^{-\gamma t}$", fontsize=8.8, fontweight='bold', color="#047857")
 
-    c_badge = FancyBboxPatch((7.5, 39.5), 85.0, 3.6, boxstyle="round,pad=0.2",
+    c_badge = FancyBboxPatch((7.5, 38.5), 85.0, 3.8, boxstyle="round,pad=0.2",
                              fc="#ECFDF5", ec="#10B981", lw=1.0, zorder=3)
     ax1.add_patch(c_badge)
-    ax1.text(50.0, 41.3, r"Subcritical Ergodic Cluster: $\mathbb{E}[C] = \frac{1}{1 - n^*} = 1.437$ Events/Cluster  |  Branching Ratio $n^* = 0.3043 < 1$",
-             fontsize=9.5, fontweight='bold', color="#065F46", ha="center", va="center", zorder=4)
+    ax1.text(50.0, 40.4, r"Subcritical Ergodic Cluster: $\mathbb{E}[C] = 1.437$ Events  |  Branching Ratio $n^* = 0.3043 < 1$",
+             fontsize=9.0, fontweight='bold', color="#065F46", ha="center", va="center", zorder=4)
 
-    ax1.plot([10.0, 92.0], [13.0, 13.0], color="#94A3B8", lw=1.5, zorder=4)
-    ax1.scatter(15.0, 13.0, s=120, color="#0284C7", zorder=5, edgecolor="#0F172A", lw=1.5)
-    ax1.text(15.0, 9.2, "Exogenous Shock $\\mu$", fontsize=9.0, fontweight='bold', color="#0284C7", ha="center")
+    ax1.plot([10.0, 92.0], [12.5, 12.5], color="#94A3B8", lw=1.5, zorder=4)
+    ax1.scatter(15.0, 12.5, s=120, color="#0284C7", zorder=5, edgecolor="#0F172A", lw=1.5)
+    ax1.text(15.0, 8.8, r"Exogenous Shock $\mu$", fontsize=8.8, fontweight='bold', color="#0284C7", ha="center")
 
     g1_nodes = [22.0, 27.0, 35.0]
     for gn in g1_nodes:
-        ax1.scatter(gn, 21.0, s=85, color="#10B981", zorder=5, edgecolor="#0F172A", lw=1.2)
-        ax1.plot([15.0, gn], [13.0, 21.0], color="#10B981", lw=1.6, zorder=4)
-    ax1.text(25.0, 23.2, "Gen 1 (Microscopic $t^{\\alpha-1}$)", fontsize=8.5, fontweight='bold', color="#047857", ha="center")
+        ax1.scatter(gn, 20.5, s=85, color="#10B981", zorder=5, edgecolor="#0F172A", lw=1.2)
+        ax1.plot([15.0, gn], [12.5, 20.5], color="#10B981", lw=1.6, zorder=4)
+    ax1.text(25.0, 23.0, r"Gen 1 (Microscopic $t^{\alpha-1}$)", fontsize=8.2, fontweight='bold', color="#047857", ha="center")
 
     g2_nodes = [(27.0, 42.0), (35.0, 48.0), (35.0, 56.0)]
     for parent, child in g2_nodes:
-        ax1.scatter(child, 29.0, s=75, color="#8B5CF6", zorder=5, edgecolor="#0F172A", lw=1.2)
-        ax1.plot([parent, child], [21.0, 29.0], color="#8B5CF6", lw=1.6, zorder=4)
-    ax1.text(49.0, 31.2, "Gen 2 (Mesoscopic $t^{-(1+\\alpha)}$ Persistence)", fontsize=8.5, fontweight='bold', color="#6D28D9", ha="center")
+        ax1.scatter(child, 28.5, s=75, color="#8B5CF6", zorder=5, edgecolor="#0F172A", lw=1.2)
+        ax1.plot([parent, child], [20.5, 28.5], color="#8B5CF6", lw=1.6, zorder=4)
+    ax1.text(49.0, 31.0, r"Gen 2 (Mesoscopic $t^{-(1+\alpha)}$ Persistence)", fontsize=8.2, fontweight='bold', color="#6D28D9", ha="center")
 
     g3_nodes = [(48.0, 68.0), (56.0, 75.0)]
     for parent, child in g3_nodes:
-        ax1.scatter(child, 35.0, s=65, color="#F59E0B", zorder=5, edgecolor="#0F172A", lw=1.2)
-        ax1.plot([parent, child], [29.0, 35.0], color="#F59E0B", lw=1.5, zorder=4)
+        ax1.scatter(child, 34.5, s=65, color="#F59E0B", zorder=5, edgecolor="#0F172A", lw=1.2)
+        ax1.plot([parent, child], [28.5, 34.5], color="#F59E0B", lw=1.5, zorder=4)
 
-    ax1.axvline(80.0, ymin=0.10, ymax=0.42, color="#DC2626", ls=":", lw=2.2, zorder=5)
+    ax1.axvline(80.0, ymin=0.09, ymax=0.42, color="#DC2626", ls=":", lw=2.2, zorder=5)
 
-    cut_box = FancyBboxPatch((70.5, 14.0), 22.0, 19.0, boxstyle="round,pad=0.3",
+    cut_box = FancyBboxPatch((70.5, 13.5), 22.0, 19.5, boxstyle="round,pad=0.3",
                              fc="#FEF2F2", ec="#DC2626", lw=1.2, zorder=5)
     ax1.add_patch(cut_box)
-    ax1.text(81.5, 29.5, "Exponential Cutoff", fontsize=9.0, fontweight='bold', color="#DC2626", ha="center", zorder=6)
-    ax1.text(81.5, 25.5, r"$t \gg 1/\gamma = 0.05\text{ s}$", fontsize=8.5, fontweight='bold', color="#991B1B", ha="center", zorder=6)
-    ax1.text(81.5, 21.0, "Guarantees Ergodicity", fontsize=8.5, color="#DC2626", ha="center", zorder=6)
-    ax1.text(81.5, 16.5, r"and $n^* < 1.0$", fontsize=8.5, fontweight='bold', color="#991B1B", ha="center", zorder=6)
+    ax1.text(81.5, 29.5, "Exponential Cutoff", fontsize=8.8, fontweight='bold', color="#DC2626", ha="center", zorder=6)
+    ax1.text(81.5, 25.5, r"$t \gg 1/\gamma = 0.05\text{ s}$", fontsize=8.2, fontweight='bold', color="#991B1B", ha="center", zorder=6)
+    ax1.text(81.5, 21.0, "Guarantees Ergodicity", fontsize=8.2, color="#DC2626", ha="center", zorder=6)
+    ax1.text(81.5, 16.5, r"and $n^* < 1.0$", fontsize=8.2, fontweight='bold', color="#991B1B", ha="center", zorder=6)
 
-    # Panel B: LOB Reflexivity Feedback Loop
+
+    # =========================================================================
+    # PANEL B: LIMIT ORDER BOOK ENDOGENOUS REFLEXIVITY FEEDBACK
+    # =========================================================================
     draw_panel_box(ax2, 2.0, 2.0, 96.0, 96.0,
-                   title="(b) LIMIT ORDER BOOK ENDOGENOUS REFLEXIVITY FEEDBACK",
-                   badge_text="LOB MECHANICS", badge_color="#0284C7")
+                   title="(b) Limit Order Book Reflexivity Feedback Loop",
+                   badge_text="LOB REFLEXIVITY LOOP", badge_color="#0284C7")
 
-    b_s1 = FancyBboxPatch((6.0, 73.0), 38.0, 17.0, boxstyle="round,pad=0.4,rounding_size=0.8",
-                          ec="#0F172A", fc="#FFFFFF", lw=1.8, zorder=3)
+    # Step 1: Institutional Meta-Order Slicing (Top Left)
+    b_s1 = FancyBboxPatch((5.0, 66.0), 40.0, 24.0, boxstyle="round,pad=0.4,rounding_size=0.8",
+                          ec="#000000", fc="#FFFFFF", lw=1.8, zorder=3)
     ax2.add_patch(b_s1)
-    ax2.text(25.0, 85.5, "Step 1: Institutional Meta-Order", fontsize=10.5, fontweight='bold', color="#0284C7", ha="center")
-    ax2.text(25.0, 81.5, r"Exogenous Parent Order ($\mu = 2.722\text{ s}^{-1}$)", fontsize=9.5, color="#1E293B", ha="center")
-    ax2.text(25.0, 76.5, r"Slicing into sequential child orders", fontsize=9.0, color="#64748B", ha="center")
+    ax2.text(25.0, 87.2, "Step 1: Meta-Order Execution", fontsize=9.8, fontweight='bold', color="#0284C7", ha="center")
+    ax2.add_patch(Rectangle((7.5, 77.0), 11.0, 6.6, facecolor="#DBEAFE", edgecolor="#2563EB", lw=1.2, zorder=4))
+    ax2.text(13.0, 81.6, "Parent Order", fontsize=7.2, fontweight='bold', color="#1E40AF", ha="center", va="center", zorder=5)
+    ax2.text(13.0, 78.8, "Volume $Q$", fontsize=7.2, fontweight='bold', color="#1E40AF", ha="center", va="center", zorder=5)
+    ax2.annotate("", xy=(22.5, 80.3), xytext=(19.0, 80.3),
+                 arrowprops=dict(facecolor="#2563EB", edgecolor="#2563EB", arrowstyle="-|>", mutation_scale=10, lw=1.5), zorder=5)
+    for idx, (cy, clbl) in enumerate([(81.5, "$q_1$"), (78.0, "$q_2$"), (74.5, "$q_3$")]):
+        ax2.add_patch(Rectangle((23.0, cy - 1.2), 6.5, 2.4, facecolor="#EFF6FF", edgecolor="#3B82F6", lw=1.0, zorder=4))
+        ax2.text(26.25, cy, clbl, fontsize=7.2, fontweight='bold', color="#1D4ED8", ha="center", va="center", zorder=5)
+    ax2.text(37.5, 81.6, "TWAP/VWAP", fontsize=7.2, color="#475569", ha="center", va="center")
+    ax2.text(37.5, 78.8, "Slicing", fontsize=7.2, color="#475569", ha="center", va="center")
+    ax2.text(25.0, 71.5, r"Exogenous Parent Rate: $\mu = 2.7224\text{ s}^{-1}$", fontsize=8.0, fontweight='bold', color="#1E293B", ha="center")
+    ax2.text(25.0, 68.2, "Executes as sequential child market orders", fontsize=7.4, color="#64748B", ha="center")
 
-    b_s2 = FancyBboxPatch((56.0, 73.0), 38.0, 17.0, boxstyle="round,pad=0.4,rounding_size=0.8",
-                          ec="#0F172A", fc="#FFFFFF", lw=1.8, zorder=3)
+    # Step 2: Directional Child Orders & LOB Impact (Top Right)
+    b_s2 = FancyBboxPatch((55.0, 66.0), 40.0, 24.0, boxstyle="round,pad=0.4,rounding_size=0.8",
+                          ec="#000000", fc="#FFFFFF", lw=1.8, zorder=3)
     ax2.add_patch(b_s2)
-    ax2.text(75.0, 85.5, "Step 2: Directional Child Orders", fontsize=10.5, fontweight='bold', color="#059669", ha="center")
-    ax2.text(75.0, 81.5, r"Taker Buys hit Best Ask Book", fontsize=9.5, color="#1E293B", ha="center")
-    ax2.text(75.0, 76.5, r"Consumes L1 Liquidity $\rightarrow$ Spread Widens", fontsize=9.0, color="#047857", ha="center")
+    ax2.text(75.0, 87.2, "Step 2: Directional Orders & Depletion", fontsize=9.8, fontweight='bold', color="#059669", ha="center")
+    ax2.add_patch(Rectangle((57.5, 81.0), 12.0, 2.5, facecolor="#FEE2E2", edgecolor="#DC2626", lw=1.0, zorder=4))
+    ax2.text(63.5, 82.25, "Ask 2: $78,105", fontsize=6.8, color="#991B1B", ha="center", va="center", zorder=5)
+    ax2.add_patch(Rectangle((57.5, 77.5), 6.0, 2.5, facecolor="#FECACA", edgecolor="#DC2626", lw=1.0, ls="--", zorder=4))
+    ax2.text(60.5, 78.75, "Ask 1 (Depleted)", fontsize=6.5, color="#DC2626", ha="center", va="center", zorder=5)
+    ax2.annotate("", xy=(64.0, 78.75), xytext=(72.0, 78.75),
+                 arrowprops=dict(facecolor="#16A34A", edgecolor="#16A34A", arrowstyle="<|-", mutation_scale=10, lw=1.8), zorder=5)
+    ax2.text(78.5, 78.75, "Taker Buy $q_1$", fontsize=7.2, fontweight='bold', color="#15803D", ha="left", va="center")
+    ax2.text(75.0, 73.0, "Best Ask Shifts Up $\to$ Spread Widens: $S_t \to S_t + \Delta S$", fontsize=7.8, fontweight="bold", color="#B91C1C", ha="center")
+    ax2.text(75.0, 69.2, "Local liquidity depleted across top book levels", fontsize=7.4, color="#64748B", ha="center")
 
-    ax2.annotate("", xy=(56.0, 81.5), xytext=(44.0, 81.5),
-                 arrowprops=dict(facecolor="#0284C7", edgecolor="#0284C7", arrowstyle="-|>", mutation_scale=18, lw=2.2, zorder=6))
-
-    b_s3 = FancyBboxPatch((56.0, 37.0), 38.0, 25.0, boxstyle="round,pad=0.4,rounding_size=0.8",
-                          ec="#0F172A", fc="#FFFFFF", lw=2.0, zorder=3)
+    # Step 3: Self-Excitation Momentum Cascade (Bottom Right)
+    b_s3 = FancyBboxPatch((55.0, 36.0), 40.0, 26.0, boxstyle="round,pad=0.4,rounding_size=0.8",
+                          ec="#000000", fc="#FFFFFF", lw=1.8, zorder=3)
     ax2.add_patch(b_s3)
-    ax2.text(75.0, 57.5, "Step 3: Self-Excitation Cascade", fontsize=11.0, fontweight='bold', color="#DC2626", ha="center")
-    ax2.text(75.0, 53.0, r"Branching Parameter: $\eta_{\text{self}} = 0.7110$", fontsize=10.0, fontweight='bold', color="#B91C1C", ha="center")
-    ax2.text(75.0, 48.5, r"Momentum algorithms & HFT latency chasers", fontsize=9.0, color="#1E293B", ha="center")
-    ax2.text(75.0, 44.5, r"submit same-direction follow-on taker orders", fontsize=9.0, color="#1E293B", ha="center")
-    ax2.text(75.0, 40.5, r"Dominates Cross-Excitation by $30.3\times$!", fontsize=9.5, fontweight='bold', color="#DC2626", ha="center")
+    ax2.text(75.0, 59.2, "Step 3: Self-Excitation Momentum", fontsize=9.8, fontweight='bold', color="#DC2626", ha="center")
+    for idx, (bx, col) in enumerate([(58.0, "#FCA5A5"), (66.0, "#F87171"), (74.0, "#EF4444"), (82.0, "#DC2626")]):
+        ax2.add_patch(Rectangle((bx, 52.0), 6.0, 3.2, facecolor=col, edgecolor="#7F1D1D", lw=0.8, zorder=4))
+        ax2.text(bx + 3.0, 53.6, f"Buy {idx+1}", fontsize=6.8, fontweight='bold', color="#FFFFFF", ha="center", va="center", zorder=5)
+        if idx < 3:
+            ax2.annotate("", xy=(bx + 7.5, 53.6), xytext=(bx + 6.0, 53.6),
+                         arrowprops=dict(facecolor="#991B1B", edgecolor="#991B1B", arrowstyle="-|>", mutation_scale=8, lw=1.2), zorder=6)
+    ax2.text(75.0, 47.8, r"Self-Excitation Parameter: $\eta_{\text{self}} = 0.7110$", fontsize=8.2, fontweight='bold', color="#B91C1C", ha="center")
+    ax2.text(75.0, 44.2, r"Momentum & trend algorithms chase order flow", fontsize=7.4, color="#1E293B", ha="center")
+    ax2.text(75.0, 40.5, r"Dominates Cross-Excitation by $30.3\times$ ($0.7110$ vs $0.0235$)", fontsize=7.8, fontweight='bold', color="#DC2626", ha="center")
+    ax2.text(75.0, 37.2, "Produces clustered trade bursts and heavy-tailed runs", fontsize=7.2, color="#64748B", ha="center")
 
-    ax2.annotate("", xy=(75.0, 62.0), xytext=(75.0, 73.0),
-                 arrowprops=dict(facecolor="#DC2626", edgecolor="#DC2626", arrowstyle="-|>", mutation_scale=18, lw=2.2, zorder=6))
-
-    b_s4 = FancyBboxPatch((6.0, 37.0), 38.0, 25.0, boxstyle="round,pad=0.4,rounding_size=0.8",
-                          ec="#0F172A", fc="#FFFFFF", lw=1.8, zorder=3)
+    # Step 4: Cross-Excitation Liquidity Replenishment (Bottom Left)
+    b_s4 = FancyBboxPatch((5.0, 36.0), 40.0, 26.0, boxstyle="round,pad=0.4,rounding_size=0.8",
+                          ec="#000000", fc="#FFFFFF", lw=1.8, zorder=3)
     ax2.add_patch(b_s4)
-    ax2.text(25.0, 57.5, "Step 4: Cross-Excitation Balancing", fontsize=11.0, fontweight='bold', color="#7C3AED", ha="center")
-    ax2.text(25.0, 53.0, r"Cross Intensity: $\eta_{\text{cross}} = 0.0235$", fontsize=10.0, fontweight='bold', color="#6D28D9", ha="center")
-    ax2.text(25.0, 48.5, r"Market makers post higher asks to replenish depth", fontsize=9.0, color="#1E293B", ha="center")
-    ax2.text(25.0, 44.5, r"Attractive spread triggers counter-side trades", fontsize=9.0, color="#1E293B", ha="center")
-    ax2.text(25.0, 40.5, r"Restores Limit Order Book Symmetry", fontsize=9.5, fontweight='bold', color="#059669", ha="center")
+    ax2.text(25.0, 59.2, "Step 4: Cross-Excitation Replenishment", fontsize=9.8, fontweight='bold', color="#7C3AED", ha="center")
+    ax2.add_patch(Rectangle((7.5, 52.0), 12.0, 3.2, facecolor="#EDE9FE", edgecolor="#7C3AED", lw=1.0, zorder=4))
+    ax2.text(13.5, 53.6, "MM Limit Depth", fontsize=6.8, fontweight='bold', color="#5B21B6", ha="center", va="center", zorder=5)
+    ax2.annotate("", xy=(24.5, 53.6), xytext=(20.5, 53.6),
+                 arrowprops=dict(facecolor="#7C3AED", edgecolor="#7C3AED", arrowstyle="-|>", mutation_scale=10, lw=1.5), zorder=5)
+    ax2.add_patch(Rectangle((25.5, 52.0), 16.5, 3.2, facecolor="#F3E8FF", edgecolor="#9333EA", lw=1.0, zorder=4))
+    ax2.text(33.75, 53.6, "New Bids/Asks Posted", fontsize=6.8, fontweight='bold', color="#6B21A8", ha="center", va="center", zorder=5)
+    ax2.text(25.0, 47.8, r"Cross-Excitation Parameter: $\eta_{\text{cross}} = 0.0235$", fontsize=8.2, fontweight='bold', color="#6D28D9", ha="center")
+    ax2.text(25.0, 44.2, "Market makers widen spreads and replenish queues", fontsize=7.4, color="#1E293B", ha="center")
+    ax2.text(25.0, 40.5, r"Attractive spread attracts counter-side liquidity", fontsize=7.4, color="#1E293B", ha="center")
+    ax2.text(25.0, 37.2, "Restores Limit Order Book balance and mean-reversion", fontsize=7.2, color="#059669", ha="center")
 
-    ax2.annotate("", xy=(44.0, 49.5), xytext=(56.0, 49.5),
-                 arrowprops=dict(facecolor="#7C3AED", edgecolor="#7C3AED", arrowstyle="-|>", mutation_scale=18, lw=2.2, zorder=6))
+    # Circular connecting arrows between steps
+    ax2.annotate("", xy=(55.0, 78.0), xytext=(45.0, 78.0),
+                 arrowprops=dict(facecolor="#0284C7", edgecolor="#0284C7", arrowstyle="-|>", mutation_scale=14, lw=2.0), zorder=6)
+    ax2.annotate("", xy=(75.0, 62.0), xytext=(75.0, 66.0),
+                 arrowprops=dict(facecolor="#DC2626", edgecolor="#DC2626", arrowstyle="-|>", mutation_scale=14, lw=2.0), zorder=6)
+    ax2.annotate("", xy=(45.0, 49.0), xytext=(55.0, 49.0),
+                 arrowprops=dict(facecolor="#7C3AED", edgecolor="#7C3AED", arrowstyle="-|>", mutation_scale=14, lw=2.0), zorder=6)
+    ax2.annotate("", xy=(25.0, 66.0), xytext=(25.0, 62.0),
+                 arrowprops=dict(facecolor="#2563EB", edgecolor="#2563EB", arrowstyle="-|>", mutation_scale=14, lw=2.0), zorder=6)
 
-    ax2.annotate("", xy=(25.0, 73.0), xytext=(25.0, 62.0),
-                 arrowprops=dict(facecolor="#2563EB", edgecolor="#2563EB", arrowstyle="-|>", mutation_scale=18, lw=2.2, zorder=6))
+    # Central Loop Badge
+    c_loop = FancyBboxPatch((45.5, 61.0), 9.0, 5.5, boxstyle="round,pad=0.2",
+                            facecolor="#FEF3C7", edgecolor="#F59E0B", lw=1.2, zorder=7)
+    ax2.add_patch(c_loop)
+    ax2.text(50.0, 64.6, "Reflexivity Loop", fontsize=7.2, fontweight='bold', color="#92400E", ha="center", va="center", zorder=8)
+    ax2.text(50.0, 62.0, r"$\mathcal{R}_{\text{refl}} = 2.07$", fontsize=7.2, fontweight='bold', color="#B45309", ha="center", va="center", zorder=8)
 
-    b_bot = FancyBboxPatch((6.0, 6.0), 88.0, 24.0, boxstyle="round,pad=0.4,rounding_size=0.8",
-                           ec="#0F172A", fc="#FFFFFF", lw=2.0, zorder=3)
+    # Bottom Container: Macroscopic Volatility Reflexivity Amplification
+    b_bot = FancyBboxPatch((5.0, 4.5), 90.0, 28.5, boxstyle="round,pad=0.4,rounding_size=0.8",
+                           ec="#000000", fc="#FFFFFF", lw=2.0, zorder=3)
     ax2.add_patch(b_bot)
-    ax2.text(50.0, 25.5, "MACROSCOPIC VOLATILITY REFLEXIVITY AMPLIFICATION",
-             fontsize=11.5, fontweight='bold', color="#0F172A", ha="center")
-    ax2.text(50.0, 20.0,
-             r"$\mathcal{R}_{\text{refl}} = \frac{1}{(1 - n^*)^2} = \frac{1}{(1 - 0.3043)^2} = 2.0661 \quad (+106.6\% \text{ Variance Amplification})$",
-             fontsize=11.5, fontweight='bold', color="#B91C1C", ha="center")
-    ax2.text(50.0, 14.5,
-             r"Micro Noise Limit: $\mathcal{V}(0) = 2\mu = 5.44$  $\longrightarrow$  Macro Diffusion Limit: $\mathcal{V}(\infty) = 2\mu \mathcal{R}_{\text{refl}} = 11.25$",
-             fontsize=10.0, fontweight='bold', color="#1E293B", ha="center")
-    ax2.text(50.0, 9.5,
-             r"Cross/Self Ratio: $\mathcal{R}_{\text{cross}} = 0.0330$ | Subcritical Stationarity: $\rho(\mathbf{\Gamma}) = 0.3330 < 1.0$",
-             fontsize=9.5, color="#047857", ha="center")
+    ax2.text(50.0, 30.8, "MACROSCOPIC VOLATILITY REFLEXIVITY AMPLIFICATION",
+             fontsize=10.5, fontweight='bold', color="#0F172A", ha="center")
+    ax2.text(50.0, 25.5,
+             r"$\mathcal{R}_{\text{refl}} = (1 - n^*)^{-2} = (1 - 0.3043)^{-2} = 2.0661 \quad (+106.6\% \text{ Endogenous Volatility Feedback})$",
+             fontsize=9.2, fontweight='bold', color="#B91C1C", ha="center")
+
+    ax2.text(12.0, 20.5, "Micro Level: $\mathcal{V}(0) = 2\mu = 5.44$", fontsize=8.0, fontweight='bold', color="#0369A1")
+    ax2.add_patch(Rectangle((12.0, 16.0), 25.0, 3.2, facecolor="#BAE6FD", edgecolor="#0284C7", lw=1.2, zorder=4))
+    ax2.text(24.5, 17.6, "Exogenous Base Volatility", fontsize=7.2, fontweight='bold', color="#0369A1", ha="center", va="center", zorder=5)
+
+    ax2.text(50.0, 20.5, "Macro Limit: $\mathcal{V}(\infty) = 2\mu \mathcal{R}_{\text{refl}} = 11.25$ (+106.6% Reflexive Feedback)", fontsize=8.0, fontweight='bold', color="#991B1B")
+    ax2.add_patch(Rectangle((50.0, 16.0), 40.0, 3.2, facecolor="#FECACA", edgecolor="#DC2626", lw=1.2, zorder=4))
+    ax2.text(70.0, 17.6, "Amplified Equilibrium Volatility (+106.6%)", fontsize=7.2, fontweight='bold', color="#991B1B", ha="center", va="center", zorder=5)
 
     fig3_path = "figures/fig3_branching_and_reflexivity.pdf"
-    plt.savefig(fig3_path, bbox_inches="tight", pad_inches=0.35, facecolor='white', edgecolor='none')
+    plt.savefig(fig3_path, bbox_inches="tight", pad_inches=0.35)
     copy_to_all_destinations(fig3_path, "fig3_branching_and_reflexivity.pdf")
     plt.close()
     print(f"Saved: {fig3_path}")
 
-generate_figure_3()
 
+generate_figure_3()
 
 # =============================================================================
 # FIGURE 4: RESOLVENT KERNEL CLOSURE & VOLATILITY SIGNATURE PLOT
@@ -761,18 +819,18 @@ for idx, tau in enumerate(tau_arr):
 
 ax2.semilogx(tau_arr, v_tau, color="#0F766E", lw=3.2, label=r"Realized Variance $\mathcal{V}(\tau)$")
 ax2.axhline(v_0, color="#64748B", ls=":", lw=2.2, label=rf"Micro Noise Limit: $2\mu = {v_0:.2f}$")
-ax2.axhline(v_inf, color="#B91C1C", ls="--", lw=2.2, label=rf"Macro Limit: $2\mu/(1-n^*)^2 = {v_inf:.2f}$")
+ax2.axhline(v_inf, color="#B91C1C", ls="--", lw=2.2, label=rf"Macro Limit: $2\mu(1-n^*)^{-2} = {v_inf:.2f}$")
 
-ax2.legend(loc="upper left", framealpha=0.94, facecolor="white", edgecolor="#CBD5E1", fontsize=13, labelspacing=0.85)
+ax2.legend(loc="upper left", framealpha=0.94, facecolor="white", edgecolor="#CBD5E1", fontsize=12.5, labelspacing=1.0)
 
 # Place reflexivity multiplier as clean non-overlapping box
-ax2.text(0.48, 0.28,
-         f"Reflexivity Multiplier: $\\mathcal{{R}}_{{\\text{{refl}}}} = (1 - n^*)^{{-2}} = {refl_mult:.3f}$\n"
-         f"(+{refl_mult*100 - 100:.1f}% Variance Amplification)",
-         transform=ax2.transAxes,
-         bbox=dict(boxstyle="round,pad=0.55", facecolor="#F8FAFC", edgecolor="#B91C1C", lw=1.5, alpha=0.96),
-         fontsize=12.5, fontweight="bold", color="#1E293B")
-
+ax2.text(0.48, 0.29, f"Reflexivity Multiplier: $\\mathcal{{R}}_{{\\text{{refl}}}} = (1 - n^*)^{{-2}} = {refl_mult:.3f}$",
+transform=ax2.transAxes, fontsize=12.0, fontweight="bold", color="#1E293B", zorder=6)
+ax2.text(0.48, 0.23, f"(+{refl_mult*100 - 100:.1f}% Endogenous Variance Amplification)",
+transform=ax2.transAxes, fontsize=11.2, fontweight="bold", color="#B91C1C", zorder=6)
+patch_box4 = FancyBboxPatch((0.46, 0.21), 0.51, 0.13, transform=ax2.transAxes,
+boxstyle="round,pad=0.02", facecolor="#F8FAFC", edgecolor="#B91C1C", lw=1.5, alpha=0.96, zorder=5)
+ax2.add_patch(patch_box4)
 ax2.set_xlabel(r"Aggregation Interval $\tau$ (seconds)", fontsize=16, fontweight="bold", labelpad=14)
 ax2.set_ylabel(r"Realized Variance $\mathcal{V}(\tau)$", fontsize=16, fontweight="bold", labelpad=12)
 ax2.set_title("(b) Volatility Signature Plot and Reflexivity", fontsize=16.5, fontweight="bold", pad=18)
@@ -842,7 +900,7 @@ bench_F = F_signs[0] * (scales_dfa / scales_dfa[0])**0.50
 ax1.loglog(scales_dfa, bench_F, 'k--', lw=2.0, label=r"Uncorrelated / Poisson Null ($H = 0.50$)")
 
 ax1.loglog(scales_ret, np.array(F_ret) * 1e4, '^', color="#D97706", markersize=7, zorder=5,
-           label=rf"Tick Price Returns ($\hat{{H}} = {slope_ret:.4f}$, Scaled $\times 10^4$)")
+           label=rf"Tick Price Returns ($\hat{{H}} = {slope_ret:.4f}$, Scaled 10,000$\times$)")
 fit_F_ret = 10**(intercept_ret + slope_ret * log_s_ret) * 1e4
 ax1.loglog(scales_ret, fit_F_ret, ':', color="#D97706", lw=2.0)
 
@@ -906,7 +964,7 @@ ax3.set_xlabel(r"Inter-Arrival Duration $\tau$ (seconds)", fontsize=15, fontweig
 ax3.set_ylabel(r"Survival Probability $P(\Delta t > \tau)$", fontsize=15, fontweight='bold', labelpad=12)
 ax3.set_title("(c) Inter-Arrival Duration Survival Distribution (CCDF)", fontsize=15.5, fontweight='bold', pad=16)
 ax3.set_xlim([1e-3, 5e0])
-ax3.set_ylim([1e-4, 1.1])
+ax3.set_ylim([3e-4, 1.2])
 ax3.grid(True, which="both", ls="--", alpha=0.35)
 ax3.tick_params(axis='both', which='major', labelsize=13)
 ax3.legend(loc="lower left", framealpha=0.92, facecolor="white", edgecolor="#CBD5E1", fontsize=10.5, labelspacing=0.85)
@@ -1126,8 +1184,8 @@ gamma_matrix = np.array([
 ])
 
 im = ax2.imshow(gamma_matrix, cmap="Blues", vmin=0, vmax=0.35)
-cbar = fig.colorbar(im, ax=ax2, shrink=0.85, pad=0.05)
-cbar.set_label(r"Branching Intensity $\Gamma_{ij}$", fontsize=15, fontweight="bold")
+cbar = fig.colorbar(im, ax=ax2, shrink=0.85, pad=0.06)
+cbar.set_label(r"Branching Intensity $\Gamma_{ij}$", fontsize=15, fontweight="bold", labelpad=18)
 cbar.ax.tick_params(labelsize=13)
 
 labels = ["Aggressive Buy (0)", "Aggressive Sell (1)"]
@@ -1142,8 +1200,10 @@ for i in range(2):
         val = gamma_matrix[i, j]
         desc = "Order Splitting" if i == j else "Spread Crossing"
         color_t = "white" if val > 0.15 else "black"
-        ax2.text(j, i, f"{val:.4f}\n({desc})", ha="center", va="center",
-                 color=color_t, fontsize=14.5, fontweight="bold")
+        ax2.text(j, i - 0.10, f"{val:.4f}", ha="center", va="center",
+                 color=color_t, fontsize=15.0, fontweight="bold")
+        ax2.text(j, i + 0.14, f"({desc})", ha="center", va="center",
+                 color=color_t, fontsize=11.5, fontweight="bold")
 
 # Centered summary text cleanly inside bottom margin with generous padding
 fig.text(0.73, 0.04,
